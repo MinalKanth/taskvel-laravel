@@ -66,6 +66,7 @@
                                 stroke-width="12"
                                 stroke-linecap="round"
                                 fill="none"
+                                
                                 stroke-dasharray="848"
                                 stroke-dashoffset="0"
                                 transform="rotate(-90 160 160)"/>
@@ -301,122 +302,77 @@
 
 <script>
 
-let duration=1500;
+// let duration = 1500;
+// let remaining = duration;
+// let timer = null;
 
-let remaining=duration;
+// const display = document.getElementById('timerDisplay');
+// const ring = document.getElementById('progressRing');
+// const circumference = 848;   
 
-let timer=null;
+// function updateDisplay() {
 
-const display=document.getElementById('timerDisplay');
+//     const min = Math.floor(remaining / 60);
+//     const sec = remaining % 60;
 
-const ring=document.getElementById('progressRing');
+//     display.innerHTML =
+//         String(min).padStart(2, '0') +
+//         ":" +
+//         String(sec).padStart(2, '0');
 
-const circumference=848;
+//     const offset = circumference - (remaining / duration) * circumference;
+//     ring.style.strokeDashoffset = offset;
+// }
 
-function updateDisplay(){
+// function startTimer() {
 
-    let min=Math.floor(remaining/60);
+//     if (timer !== null) {
+//         return;
+//     }
 
-    let sec=remaining%60;
+//     timer = setInterval(function () {
 
-    display.innerHTML=
-        String(min).padStart(2,'0')
-        +":"
-        +String(sec).padStart(2,'0');
+//         if (remaining > 0) {
 
-    let offset=circumference-(remaining/duration)*circumference;
+//             remaining--;
+//             updateDisplay();
 
-    ring.style.strokeDashoffset=offset;
+//         } else {
 
-}
+//             clearInterval(timer);
+//             timer = null;
 
-function startTimer(){
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Focus Session Complete',
+//                 text: 'Great work!'
+//             });
 
-    function startTimer(){
+//         }
 
-    if(timer !== null) return;
+//     }, 1000);
+// }
 
-    timer = setInterval(function(){
+// function pauseTimer() {
 
-        if(remaining > 0){
+//     clearInterval(timer);
+//     timer = null;
+// }
 
-            remaining--;
+// function resetTimer() {
 
-            updateDisplay();
+//     clearInterval(timer);
+//     timer = null;
 
-        }else{
+//     remaining = duration;
+//     updateDisplay();
+// }
 
-            clearInterval(timer);
+// document.getElementById('startBtn').addEventListener('click', startTimer);
+// document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
+// document.getElementById('resetBtn').addEventListener('click', resetTimer);
 
-            timer = null;
-
-            Swal.fire({
-                icon:'success',
-                title:'Focus Session Complete',
-                text:'Great work!'
-            });
-
-        }
-
-    },1000);
-
-}
-
-    timer=setInterval(function(){
-
-        if(remaining>0){
-
-            remaining--;
-
-            updateDisplay();
-
-        }else{
-
-            clearInterval(timer);
-
-            // timer=null;
-
-            Swal.fire({
-
-                icon:'success',
-
-                title:'Focus Session Complete',
-
-                text:'Great work!'
-
-            });
-
-        }
-
-    },1000);
-
-}
-
-function pauseTimer(){
-
-    clearInterval(timer);
-
-    timer = null;
-
-}
-
-function resetTimer(){
-
-    clearInterval(timer);
-
-    timer = null;
-
-    remaining = duration;
-
-    updateDisplay();
-
-}
-
-document.getElementById('startBtn').onclick=startTimer;
-document.getElementById('pauseBtn').onclick=pauseTimer;
-document.getElementById('resetBtn').onclick=resetTimer;
-
-updateDisplay();
+// updateDisplay();
 
 </script>
 

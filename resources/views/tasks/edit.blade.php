@@ -1,435 +1,348 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Task')
+@section('title', 'Edit — '.$task->title)
 
 @section('content')
 
 <div class="container-fluid">
 
-    <!-- Header -->
-
     <div class="d-flex justify-content-between align-items-center mb-4">
-
         <div>
-
-            <h2 class="fw-bold mb-1">
-
-                Edit Task
-
-            </h2>
-
-            <p class="text-muted">
-
-                Update task information and progress.
-
-            </p>
-
+            <h2 class="fw-bold mb-1">Edit Task</h2>
+            <p class="text-muted mb-0">{{ $task->title }}</p>
         </div>
-
-        <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary">
-
-            <i class="bi bi-arrow-left"></i>
-
-            Back
-
-        </a>
-
+        <div class="d-flex gap-2">
+            <a href="{{ route('tasks.show', $task) }}" class="btn btn-outline-secondary">
+                <i class="bi bi-eye me-1"></i>View
+            </a>
+            <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+        </div>
     </div>
 
-    <form method="POST" action="{{ route('tasks.update',$task) }}">
+    @if($errors->any())
+        <div class="alert alert-danger mb-4">
+            <strong>Please fix:</strong>
+            <ul class="mb-0 mt-1">
+                @foreach($errors->all() as $error) <li>{{ $error }}</li> @endforeach
+            </ul>
+        </div>
+    @endif
 
+    <form method="POST" action="{{ route('tasks.update', $task) }}">
         @csrf
         @method('PUT')
 
         <div class="row g-4">
 
-            <!-- Left -->
-
+            {{-- ── Left ──────────────────────────────────────────────────── --}}
             <div class="col-lg-8">
 
-                <div class="card shadow-sm border-0">
-
-                    <div class="card-header bg-white">
-
-                        <h5 class="mb-0">
-
-                            Task Details
-
-                        </h5>
-
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-card-text me-2 text-primary"></i>Task Details</h5>
                     </div>
-
                     <div class="card-body">
 
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Title
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="title"
-                                class="form-control @error('title') is-invalid @enderror"
-                                value="{{ old('title',$task->title) }}">
-
-                            @error('title')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Title <span class="text-danger">*</span></label>
+                            <input type="text" name="title"
+                                   class="form-control form-control-lg @error('title') is-invalid @enderror"
+                                   value="{{ old('title', $task->title) }}">
+                            @error('title') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Description
-
-                            </label>
-
-                            <textarea
-                                rows="8"
-                                name="description"
-                                class="form-control">{{ old('description',$task->description) }}</textarea>
-
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea name="description" rows="5" class="form-control">{{ old('description', $task->description) }}</textarea>
                         </div>
 
-                        <div class="row">
-
-                            <div class="col-md-6">
-
-                                <div class="mb-3">
-
-                                    <label class="form-label">
-
-                                        Due Date
-
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        id="due_date"
-                                        name="due_date"
-                                        value="{{ old('due_date',optional($task->due_date)->format('Y-m-d H:i')) }}"
-                                        class="form-control">
-
-                                </div>
-
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <div class="mb-3">
-
-                                    <label class="form-label">
-
-                                        Estimated Minutes
-
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        name="estimated_minutes"
-                                        value="{{ old('estimated_minutes',$task->estimated_minutes) }}"
-                                        class="form-control">
-
-                                </div>
-
-                            </div>
-
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Private Notes</label>
+                            <textarea name="notes" rows="3" class="form-control">{{ old('notes', $task->notes) }}</textarea>
                         </div>
 
                     </div>
-
                 </div>
 
-                <!-- Steps -->
-
-                <div class="card shadow-sm border-0 mt-4">
-
-                    <div class="card-header bg-white d-flex justify-content-between">
-
-                        <h5 class="mb-0">
-
-                            Task Steps
-
-                        </h5>
-
-                        <button
-                            type="button"
-                            class="btn btn-primary btn-sm"
-                            id="addStep">
-
-                            <i class="bi bi-plus"></i>
-
-                            Add Step
-
-                        </button>
-
+                {{-- Timeline --}}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-calendar3 me-2 text-primary"></i>Timeline</h5>
                     </div>
-
                     <div class="card-body">
-
-                        <div id="stepsContainer">
-
-                            @foreach($task->steps as $index=>$step)
-
-                                <div class="input-group mb-3 step-item">
-
-                                    <span class="input-group-text">
-
-                                        {{ $index+1 }}
-
-                                    </span>
-
-                                    <input
-                                        type="text"
-                                        name="steps[]"
-                                        class="form-control"
-                                        value="{{ $step->title }}">
-
-                                    <button
-                                        type="button"
-                                        class="btn btn-outline-danger remove-step">
-
-                                        <i class="bi bi-trash"></i>
-
-                                    </button>
-
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Due Date</label>
+                                <input type="text" id="due_date" name="due_date"
+                                       class="form-control"
+                                       value="{{ old('due_date', optional($task->due_date)->format('Y-m-d H:i')) }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Reminder</label>
+                                <input type="text" id="reminder_at" name="reminder_at"
+                                       class="form-control"
+                                       value="{{ old('reminder_at', optional($task->reminder_at)->format('Y-m-d H:i')) }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Estimated Time</label>
+                                <div class="input-group">
+                                    <input type="number" name="estimated_minutes"
+                                           class="form-control"
+                                           value="{{ old('estimated_minutes', $task->estimated_minutes) }}" min="1">
+                                    <span class="input-group-text">min</span>
                                 </div>
-
-                            @endforeach
-
+                            </div>
                         </div>
-
                     </div>
+                </div>
 
+                {{-- Steps --}}
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-check2-square me-2 text-primary"></i>Checklist Steps</h5>
+                        <button type="button" class="btn btn-sm btn-primary" id="addStep">
+                            <i class="bi bi-plus me-1"></i>Add Step
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="stepsContainer">
+                            @forelse($task->steps as $index => $step)
+                                <div class="input-group mb-2 step-item">
+                                    <span class="input-group-text bg-white border-end-0 text-muted" style="cursor:grab;">
+                                        <i class="bi bi-grip-vertical"></i>
+                                    </span>
+                                    <input type="text" name="steps[]"
+                                           class="form-control border-start-0 border-end-0 ps-0"
+                                           value="{{ $step->title }}">
+                                    <button type="button" class="btn btn-outline-danger border remove-step">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                            @empty
+                                <div class="input-group mb-2 step-item">
+                                    <span class="input-group-text bg-white border-end-0 text-muted" style="cursor:grab;">
+                                        <i class="bi bi-grip-vertical"></i>
+                                    </span>
+                                    <input type="text" name="steps[]"
+                                           class="form-control border-start-0 border-end-0 ps-0" placeholder="Step 1…">
+                                    <button type="button" class="btn btn-outline-danger border remove-step">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
-            <!-- Right -->
-
+            {{-- ── Right ─────────────────────────────────────────────────── --}}
             <div class="col-lg-4">
 
-                <div class="card shadow-sm border-0">
-
-                    <div class="card-header bg-white">
-
-                        <h5 class="mb-0">
-
-                            Task Settings
-
-                        </h5>
-
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-sliders me-2 text-primary"></i>Settings</h5>
                     </div>
-
                     <div class="card-body">
 
                         <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Priority
-
-                            </label>
-
+                            <label class="form-label fw-semibold">Priority</label>
                             <select name="priority" class="form-select">
-
-                                @foreach(['low','medium','high','urgent'] as $priority)
-
-                                    <option
-                                        value="{{ $priority }}"
-                                        @selected($task->priority==$priority)>
-
-                                        {{ ucfirst($priority) }}
-
-                                    </option>
-
+                                @foreach(['low'=>'🟢 Low','medium'=>'🟡 Medium','high'=>'🟠 High','urgent'=>'🔴 Urgent'] as $val=>$label)
+                                    <option value="{{ $val }}" @selected($task->priority===$val)>{{ $label }}</option>
                                 @endforeach
-
                             </select>
-
                         </div>
 
                         <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Status
-
-                            </label>
-
+                            <label class="form-label fw-semibold">Status</label>
                             <select name="status" class="form-select">
-
-                                @foreach(['pending','in_progress','completed'] as $status)
-
-                                    <option
-                                        value="{{ $status }}"
-                                        @selected($task->status==$status)>
-
-                                        {{ ucwords(str_replace('_',' ',$status)) }}
-
-                                    </option>
-
+                                @foreach(['pending'=>'Pending','in_progress'=>'In Progress','completed'=>'Completed','cancelled'=>'Cancelled'] as $val=>$label)
+                                    <option value="{{ $val }}" @selected($task->status===$val)>{{ $label }}</option>
                                 @endforeach
-
                             </select>
-
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label fw-semibold">Recurrence</label>
+                            <select name="recurrence" class="form-select">
+                                @foreach(['none'=>'No recurrence','daily'=>'Daily','weekly'=>'Weekly','monthly'=>'Monthly'] as $val=>$label)
+                                    <option value="{{ $val }}" @selected(($task->recurrence??'none')===$val)>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                            <label class="form-label">
-
-                                Progress
-
+                        {{-- Progress slider --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold d-flex justify-content-between">
+                                <span>Progress</span>
+                                <span id="progressValue" class="text-primary fw-bold">{{ old('progress', $task->progress ?? 0) }}%</span>
                             </label>
-
-                            <input
-                                id="progress"
-                                type="range"
-                                class="form-range"
-                                min="0"
-                                max="100"
-                                name="progress"
-                                value="{{ $task->progress }}">
-
-                            <div class="text-center fw-bold">
-
-                                <span id="progressValue">
-
-                                    {{ $task->progress }}
-
-                                </span>%
-
+                            <input id="progressRange" type="range" class="form-range"
+                                   min="0" max="100" name="progress"
+                                   value="{{ old('progress', $task->progress ?? 0) }}">
+                            <div class="progress mt-1" style="height:6px;border-radius:20px;">
+                                <div id="progressBar" class="progress-bar"
+                                     style="width:{{ old('progress', $task->progress ?? 0) }}%"></div>
                             </div>
-
                         </div>
 
                         <div class="mb-3">
+                            <label class="form-label fw-semibold">Category</label>
+                            <input type="text" name="category" class="form-control"
+                                   value="{{ old('category', $task->category) }}" list="category-list">
+                            <datalist id="category-list">
+                                <option value="Work"><option value="Personal"><option value="Health">
+                                <option value="Learning"><option value="Finance"><option value="Home">
+                            </datalist>
+                        </div>
 
-                            <label class="form-label">
-
-                                Tags
-
-                            </label>
-
-                            <select
-                                name="tags[]"
-                                id="tags"
-                                class="form-select"
-                                multiple>
-
-                                @foreach($tags as $tag)
-
-                                    <option
-                                        value="{{ $tag->id }}"
-                                        @selected($task->tags->contains($tag->id))>
-
-                                        {{ $tag->name }}
-
-                                    </option>
-
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Task Color</label>
+                            <div class="d-flex gap-2 flex-wrap">
+                                @foreach(['#4f46e5','#10b981','#f59e0b','#ef4444','#0ea5e9','#7c3aed','#ec4899'] as $c)
+                                    <label class="cursor-pointer" title="{{ $c }}">
+                                        <input type="radio" name="color" value="{{ $c }}" class="visually-hidden color-radio"
+                                               @checked(($task->color??'#4f46e5')===$c)>
+                                        <span class="color-swatch d-block"
+                                              style="width:28px;height:28px;border-radius:50%;background:{{ $c }};border:3px solid {{ ($task->color??'#4f46e5')===$c ? '#111' : 'transparent' }};transition:.2s;"></span>
+                                    </label>
                                 @endforeach
+                            </div>
+                        </div>
 
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold">Tags</label>
+                            <select name="tags[]" id="tags" class="form-select" multiple>
+                                @foreach($tags as $tag)
+                                    <option value="{{ $tag->id }}" @selected($task->tags->contains($tag->id))>{{ $tag->name }}</option>
+                                @endforeach
                             </select>
-
                         </div>
 
                     </div>
-
                 </div>
 
-                <div class="card shadow-sm border-0 mt-4">
-
-                    <div class="card-body d-grid">
-
-                        <button class="btn btn-success btn-lg">
-
-                            <i class="bi bi-check-circle me-2"></i>
-
-                            Update Task
-
-                        </button>
-
+                {{-- Impact Matrix --}}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-grid-3x3 me-2 text-primary"></i>Impact Matrix</h5>
                     </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold d-flex justify-content-between">
+                                <span>Urgency</span>
+                                <span id="urgencyVal" class="text-primary">{{ old('urgency', $task->urgency ?? 3) }}/5</span>
+                            </label>
+                            <input type="range" class="form-range" name="urgency"
+                                   min="1" max="5" value="{{ old('urgency', $task->urgency ?? 3) }}" id="urgencyRange">
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label fw-semibold d-flex justify-content-between">
+                                <span>Impact</span>
+                                <span id="impactVal" class="text-primary">{{ old('impact', $task->impact ?? 3) }}/5</span>
+                            </label>
+                            <input type="range" class="form-range" name="impact"
+                                   min="1" max="5" value="{{ old('impact', $task->impact ?? 3) }}" id="impactRange">
+                        </div>
+                        <div id="matrixQuadrant" class="mt-3 p-2 rounded text-center" style="font-size:.82rem;"></div>
+                    </div>
+                </div>
 
+                {{-- Save --}}
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg fw-semibold">
+                            <i class="bi bi-check-circle me-2"></i>Update Task
+                        </button>
+                        <a href="{{ route('tasks.show', $task) }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
                 </div>
 
             </div>
-
         </div>
-
     </form>
 
 </div>
-
 @endsection
 
 @push('scripts')
-
 <script>
+flatpickr('#due_date',    { enableTime:true, dateFormat:'Y-m-d H:i' });
+flatpickr('#reminder_at', { enableTime:true, dateFormat:'Y-m-d H:i' });
+new TomSelect('#tags', { create: false, plugins: ['remove_button'] });
 
-flatpickr("#due_date",{
-    enableTime:true,
-    dateFormat:"Y-m-d H:i"
+// Progress slider
+const progressRange = document.getElementById('progressRange');
+const progressValue = document.getElementById('progressValue');
+const progressBar   = document.getElementById('progressBar');
+
+progressRange.addEventListener('input', function() {
+    progressValue.textContent = this.value + '%';
+    progressBar.style.width   = this.value + '%';
+    progressBar.className     = 'progress-bar' + (parseInt(this.value)===100 ? ' bg-success' : '');
 });
 
-new TomSelect("#tags");
+// Color swatches
+document.querySelectorAll('.color-radio').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        document.querySelectorAll('.color-swatch').forEach(s => s.style.border='3px solid transparent');
+        this.nextElementSibling.style.border = '3px solid #111';
+    });
+});
 
-const progress=document.getElementById('progress');
-const value=document.getElementById('progressValue');
+// Eisenhower
+const urgencyRange = document.getElementById('urgencyRange');
+const impactRange  = document.getElementById('impactRange');
+const urgencyVal   = document.getElementById('urgencyVal');
+const impactVal    = document.getElementById('impactVal');
+const quadrant     = document.getElementById('matrixQuadrant');
+const quadrantInfo = [
+    { label:'Schedule',  desc:'Low urgency, low impact',   bg:'#f1f5f9', color:'#64748b' },
+    { label:'Delegate',  desc:'Low urgency, high impact',  bg:'#eff6ff', color:'#1d4ed8' },
+    { label:'Consider',  desc:'High urgency, low impact',  bg:'#fefce8', color:'#a16207' },
+    { label:'Do First',  desc:'High urgency, high impact', bg:'#fef2f2', color:'#b91c1c' },
+];
 
-progress.oninput=function(){
-    value.innerText=this.value;
+function updateQuadrant() {
+    const u = parseInt(urgencyRange.value);
+    const i = parseInt(impactRange.value);
+    urgencyVal.textContent = u + '/5';
+    impactVal.textContent  = i + '/5';
+    const idx = (u >= 3 ? 2 : 0) + (i >= 3 ? 1 : 0);
+    const q   = quadrantInfo[idx];
+    quadrant.style.background = q.bg;
+    quadrant.style.color      = q.color;
+    quadrant.innerHTML = `<strong>${q.label}</strong> — ${q.desc}`;
 }
+urgencyRange.addEventListener('input', updateQuadrant);
+impactRange.addEventListener('input',  updateQuadrant);
+updateQuadrant();
 
-let stepCount={{ $task->steps->count() }};
-
-document.getElementById('addStep').onclick=function(){
-
+// Steps
+let stepCount = {{ $task->steps->count() ?: 1 }};
+document.getElementById('addStep').addEventListener('click', function() {
     stepCount++;
-
-    document.getElementById('stepsContainer').insertAdjacentHTML('beforeend',`
-
-    <div class="input-group mb-3 step-item">
-
-        <span class="input-group-text">${stepCount}</span>
-
-        <input
-            type="text"
-            name="steps[]"
-            class="form-control">
-
-        <button
-            type="button"
-            class="btn btn-outline-danger remove-step">
-
-            <i class="bi bi-trash"></i>
-
-        </button>
-
-    </div>
-
+    document.getElementById('stepsContainer').insertAdjacentHTML('beforeend', `
+        <div class="input-group mb-2 step-item">
+            <span class="input-group-text bg-white border-end-0 text-muted" style="cursor:grab;">
+                <i class="bi bi-grip-vertical"></i>
+            </span>
+            <input type="text" name="steps[]"
+                   class="form-control border-start-0 border-end-0 ps-0" placeholder="Step ${stepCount}…">
+            <button type="button" class="btn btn-outline-danger border remove-step">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
     `);
-
-};
-
-document.addEventListener('click',function(e){
-
-    if(e.target.closest('.remove-step')){
-
-        e.target.closest('.step-item').remove();
-
-    }
-
 });
 
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.remove-step')) {
+        e.target.closest('.step-item').remove();
+    }
+});
 </script>
-
 @endpush
