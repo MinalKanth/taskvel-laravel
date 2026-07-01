@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="theme-color" content="#6d5efc">
 
-    <title>@yield('title', 'Taskvel — Premium Task Management')</title>
+    <title>@yield('title', 'Taskvel — कार्य, Done Well')</title>
     <meta name="description" content="@yield('meta_description', 'Taskvel - Premium Productivity & Task Management')">
 
     {{-- ===== Favicon ===== --}}
@@ -34,57 +34,7 @@
     {{-- ===== App CSS ===== --}}
     <link rel="stylesheet" href="{{ asset('assets/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
-<style>
-    /* ============ LAYOUT FIX ============ */
 
-/* Sidebar stays fixed */
-.sidebar {
-    width: 268px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 1030;
-}
-
-/* Push main content beside the sidebar, not under it */
-.main-wrapper {
-    margin-left: 268px;
-    min-height: 100vh;
-    width: calc(100% - 268px);
-    transition: margin-left .25s ease, width .25s ease;
-    box-sizing: border-box;
-}
-
-/* When sidebar is collapsed */
-.sidebar.collapsed {
-    width: 82px;
-}
-.main-wrapper.sidebar-collapsed {
-    margin-left: 82px;
-    width: calc(100% - 82px);
-}
-
-/* Navbar inside main-wrapper should span full width of remaining space */
-.premium-navbar {
-    width: 100%;
-}
-
-/* Mobile: sidebar becomes an overlay drawer, content takes full width */
-@media (max-width: 991.98px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-    .sidebar.show {
-        transform: translateX(0);
-    }
-    .main-wrapper,
-    .main-wrapper.sidebar-collapsed {
-        margin-left: 0;
-        width: 100%;
-    }
-}
-</style>
     @stack('styles')
 
 </head>

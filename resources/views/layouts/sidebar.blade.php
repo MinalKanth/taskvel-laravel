@@ -11,7 +11,7 @@
 
             <div class="logo-text">
                 <h4 class="mb-0">Taskvel</h4>
-                <small>Productivity Suite</small>
+                <small>कार्य, Done Well</small>
             </div>
 
         </a>
