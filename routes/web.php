@@ -84,6 +84,7 @@ Route::middleware(['auth'])->group(function () {
     */
 
     Route::resource('remarks', RemarkController::class);
+    Route::post('remarks/{remark}/toggle-pin', [RemarkController::class, 'togglePin'])->name('remarks.togglePin');
 
     
 
@@ -123,17 +124,27 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/notifications', [NotificationController::class, 'index'])
-        ->name('notifications.index');
+    // Route::get('/notifications', [NotificationController::class, 'index'])
+    //     ->name('notifications.index');
 
-    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
-        ->name('notifications.read');
+    // Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+    //     ->name('notifications.read');
 
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
-        ->name('notifications.readAll');
+    // Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+    //     ->name('notifications.readAll');
 
     Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])
         ->name('notifications.destroy');
+
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/',                              [NotificationController::class, 'index'])       ->name('index');
+    Route::post('/read-all',                     [NotificationController::class, 'readAll'])     ->name('readAll');
+    Route::delete('/clear-read',                 [NotificationController::class, 'clearRead'])   ->name('clearRead');
+    Route::get('/unread-count',                  [NotificationController::class, 'unreadCount']) ->name('unreadCount');
+    Route::get('/{notification}',                [NotificationController::class, 'show'])        ->name('show');
+    Route::patch('/{notification}/read',         [NotificationController::class, 'read'])        ->name('read');
+    Route::delete('/{notification}',             [NotificationController::class, 'destroy'])     ->name('destroy');
+});
 
     /*
     |--------------------------------------------------------------------------
