@@ -10,6 +10,23 @@ class ExportController extends Controller
     /**
      * Export all tasks as CSV.
      */
+    public function index()
+{
+    return view('export.index');
+}
+public function export(Request $request)
+{
+    $request->validate([
+    'type' => 'required',
+    'format' => 'required|in:csv,pdf,excel',
+]);
+
+    return match ($request->type) {
+        'tasks'   => $this->tasks($request),
+        'focus'   => $this->focusSessions($request),
+        'summary' => $this->summary($request),
+    };
+}
     public function tasks(Request $request): StreamedResponse
     {
         $tasks = $request->user()

@@ -9,6 +9,42 @@ use Illuminate\Http\Request;
 
 class RemarkController extends Controller
 {
+
+    public function index(Request $request)
+
+{
+
+    $tasks = auth()->user()->tasks()
+
+        ->orderBy('title')
+
+        ->get();
+
+    $remarks = Remark::with(['task', 'user'])
+
+        ->where('user_id', auth()->id())
+
+        ->when($request->filled('search'), function ($query) use ($request) {
+
+            $query->where('remark', 'like', '%' . $request->search . '%');
+
+        })
+
+        ->when($request->filled('task_id'), function ($query) use ($request) {
+
+            $query->where('task_id', $request->task_id);
+
+        })
+
+        ->latest()
+
+        ->paginate(10)
+
+        ->withQueryString();
+
+    return view('remarks.index', compact('remarks', 'tasks'));
+
+}
     /**
      * Store a new remark.
      */
@@ -26,21 +62,38 @@ class RemarkController extends Controller
 
 }
 
-    public function store(Request $request, Task $task)
-    {
-        $this->authorizeTask($task);
+    public function store(Request $request)
+{
+    $validated = $request->validate([
+        'task_id' => ['required', 'exists:tasks,id'],
+        'remark'  => ['required', 'string', 'max:5000'],
+    ]);
 
-        $validated = $request->validate([
-            'remark' => ['required', 'string', 'max:5000'],
-        ]);
+    $task = Task::findOrFail($validated['task_id']);
 
-        $task->remarks()->create([
-            'user_id' => auth()->id(),
-            'remark'  => $validated['remark'],
-        ]);
+    $this->authorizeTask($task);
 
-        return back()->with('success', 'Remark added successfully.');
-    }
+    $task->remarks()->create([
+        'user_id' => auth()->id(),
+        'remark'  => $validated['remark'],
+    ]);
+
+    return redirect()
+        ->route('tasks.show', $task)
+        ->with('success', 'Remark added successfully.');
+}
+
+public function edit(Remark $remark)
+{
+    $this->authorizeRemark($remark);
+
+    $tasks = auth()->user()
+        ->tasks()
+        ->orderBy('title')
+        ->get();
+
+    return view('remarks.edit', compact('remark', 'tasks'));
+}
 
     /**
      * Update an existing remark.
