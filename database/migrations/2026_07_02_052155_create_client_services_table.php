@@ -1,116 +1,103 @@
 <?php
 
-namespace App\Models;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class ClientService extends Model
+return new class extends Migration
 {
-    use HasFactory, SoftDeletes;
-
-    protected $fillable = [
-
-        'client_id',
-
-        'service_id',
-
-        'start_date',
-        'end_date',
-
-        'assigned_to',
-
-        'service_fee',
-        'discount',
-        'tax_percentage',
-
-        'billing_cycle',
-
-        'due_day',
-
-        'auto_generate_tasks',
-
-        'status',
-
-        'renewable',
-
-        'renewal_date',
-
-        'remarks',
-
-        'is_active',
-    ];
-
-    protected $casts = [
-
-        'start_date' => 'date',
-
-        'end_date' => 'date',
-
-        'renewal_date' => 'date',
-
-        'service_fee' => 'decimal:2',
-
-        'discount' => 'decimal:2',
-
-        'tax_percentage' => 'decimal:2',
-
-        'auto_generate_tasks' => 'boolean',
-
-        'renewable' => 'boolean',
-
-        'is_active' => 'boolean',
-    ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
-
-    public function client()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        return $this->belongsTo(Client::class);
+        Schema::create('client_services', function (Blueprint $table) {
+
+            $table->id();
+
+            // Relationships
+            $table->foreignId('client_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('service_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('assigned_to')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
+
+            // Service Period
+            $table->date('start_date')->nullable();
+
+            $table->date('end_date')->nullable();
+
+            // Pricing
+            $table->decimal('service_fee', 12, 2)->default(0);
+
+            $table->decimal('discount', 12, 2)->default(0);
+
+            $table->decimal('tax_percentage', 5, 2)->default(0);
+
+            // Billing
+            $table->enum('billing_cycle', [
+                'One Time',
+                'Monthly',
+                'Quarterly',
+                'Half Yearly',
+                'Yearly',
+            ])->default('Monthly');
+
+            $table->unsignedTinyInteger('due_day')
+                ->nullable();
+
+            // Automation
+            $table->boolean('auto_generate_tasks')
+                ->default(true);
+
+            // Status
+            $table->enum('status', [
+                'Pending',
+                'Active',
+                'Suspended',
+                'Completed',
+                'Expired',
+                'Cancelled',
+            ])->default('Pending');
+
+            $table->boolean('renewable')
+                ->default(true);
+
+            $table->date('renewal_date')
+                ->nullable();
+
+            $table->longText('remarks')
+                ->nullable();
+
+            $table->boolean('is_active')
+                ->default(true);
+
+            $table->timestamps();
+
+            $table->softDeletes();
+
+            // Indexes
+            $table->index('client_id');
+            $table->index('service_id');
+            $table->index('assigned_to');
+            $table->index('status');
+            $table->index('billing_cycle');
+            $table->index('is_active');
+        });
     }
 
-    public function service()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
-        return $this->belongsTo(Service::class);
+        Schema::dropIfExists('client_services');
     }
-
-    public function assignedUser()
-    {
-        return $this->belongsTo(User::class, 'assigned_to');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Scopes
-    |--------------------------------------------------------------------------
-    */
-
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    public function scopeRunning($query)
-    {
-        return $query->where('status', 'Active');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Accessor
-    |--------------------------------------------------------------------------
-    */
-
-    public function getFinalAmountAttribute()
-    {
-        $amount = $this->service_fee - $this->discount;
-
-        return $amount + ($amount * $this->tax_percentage / 100);
-    }
-    
-}
+};
