@@ -1,25 +1,76 @@
-/* ============ SIDEBAR CORE ============ */
+/* ============================================================
+   SIDEBAR — sidebar.css
+   This file MUST load AFTER app.css to win specificity wars.
+   Overrides app.css sidebar rules which use position:sticky,
+   min-width:280px and width:var(--sidebar-width).
+   ============================================================ */
 
+
+/* ── Force sidebar sizing (beats app.css min-width) ──────── */
+
+#sidebar.sidebar,
 .sidebar {
+    /* Override app.css: width:var(--sidebar-width) + min-width:var(--sidebar-width) + position:sticky */
     width: 268px !important;
-    height: 100vh;
-    position: fixed;
+    min-width: 0 !important;           /* ← kills the app.css min-width lock */
+    position: fixed !important;        /* ← override app.css position:sticky  */
     top: 0;
     left: 0;
+    height: 100vh;
     z-index: 1030;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(180deg, #16121f 0%, #1a1526 55%, #16121f 100%);
-    border-right: 1px solid rgba(255, 255, 255, 0.06);
-    box-shadow: 8px 0 32px rgba(17, 12, 46, 0.18);
-    transition: width .25s ease;
+    background: linear-gradient(180deg, #16121f 0%, #1a1526 55%, #16121f 100%) !important;
+    border-right: 1px solid rgba(255,255,255,.06);
+    box-shadow: 8px 0 32px rgba(17,12,46,.18);
+    transition: width .25s ease !important;
     overflow-x: hidden;
+    overflow-y: auto;
 }
+
+/* ── Collapsed: shrink the sidebar box ───────────────────── */
+
+#sidebar.sidebar.collapsed,
+.sidebar.collapsed {
+    width: 72px !important;
+    min-width: 0 !important;
+}
+
+
+/* ── Main wrapper: push right of sidebar ─────────────────── */
+
+.main-wrapper {
+    margin-left: 268px !important;
+    width: calc(100% - 268px) !important;
+    /* override app.css flex:1 which ignores fixed sidebar */
+    flex: none !important;
+    min-width: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+    transition: margin-left .25s ease, width .25s ease;
+}
+
+.main-wrapper.sidebar-collapsed {
+    margin-left: 72px !important;
+    width: calc(100% - 72px) !important;
+}
+
+
+/* ── Sidebar internals ────────────────────────────────────── */
 
 .sidebar-body {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 20px 14px 10px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(109,94,252,.3) transparent;
+}
+
+.sidebar-body::-webkit-scrollbar { width: 4px; }
+.sidebar-body::-webkit-scrollbar-thumb {
+    background: rgba(109,94,252,.3);
+    border-radius: 20px;
 }
 
 .sidebar-header {
@@ -27,14 +78,20 @@
     align-items: center;
     justify-content: space-between;
     padding: 22px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: padding .25s ease, justify-content .25s ease;
 }
 
 .logo {
     display: flex;
     align-items: center;
     gap: 12px;
-    transition: justify-content .25s ease;
+    text-decoration: none;
+    overflow: hidden;
+    min-width: 0;
+    transition: gap .25s ease;
 }
 
 .logo-icon {
@@ -48,7 +105,14 @@
     font-size: 1.15rem;
     color: #fff;
     background: linear-gradient(135deg, #6d5efc, #a06dfc);
-    box-shadow: 0 6px 18px rgba(109, 94, 252, 0.45);
+    box-shadow: 0 6px 18px rgba(109,94,252,.45);
+}
+
+.logo-text {
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity .2s ease, max-width .25s ease;
+    max-width: 200px;
 }
 
 .logo-text h4 {
@@ -56,10 +120,11 @@
     font-weight: 700;
     font-size: 1.15rem;
     letter-spacing: -.02em;
+    margin: 0;
 }
 
 .logo-text small {
-    color: rgba(255, 255, 255, 0.45);
+    color: rgba(255,255,255,.45);
     font-size: .72rem;
     text-transform: uppercase;
     letter-spacing: .06em;
@@ -68,20 +133,25 @@
 .sidebar-collapse-btn {
     width: 30px;
     height: 30px;
+    flex-shrink: 0;
     border: none;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255,255,255,.06);
+    color: rgba(255,255,255,.6);
+    display: flex;
     align-items: center;
     justify-content: center;
     transition: all .2s ease;
-    flex-shrink: 0;
+    cursor: pointer;
 }
 
 .sidebar-collapse-btn:hover {
-    background: rgba(109, 94, 252, 0.25);
+    background: rgba(109,94,252,.25);
     color: #fff;
 }
+
+
+/* ── Nav sections ─────────────────────────────────────────── */
 
 .nav-section { margin-bottom: 26px; }
 
@@ -92,7 +162,10 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .1em;
-    color: rgba(255, 255, 255, 0.32);
+    color: rgba(255,255,255,.32);
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity .2s ease, max-height .25s ease;
 }
 
 .nav-item { position: relative; margin-bottom: 3px; }
@@ -103,12 +176,14 @@
     gap: 12px;
     padding: 11px 14px;
     border-radius: 12px;
-    color: rgba(255, 255, 255, 0.68);
+    color: rgba(255,255,255,.68);
     font-size: .9rem;
     font-weight: 500;
     text-decoration: none;
     position: relative;
     transition: all .18s ease;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .nav-icon {
@@ -117,40 +192,17 @@
     align-items: center;
     justify-content: center;
     font-size: 1.02rem;
-    color: rgba(255, 255, 255, 0.5);
-    transition: all .18s ease;
+    color: rgba(255,255,255,.5);
+    transition: color .18s ease;
     flex-shrink: 0;
 }
 
-.nav-text { flex: 1; white-space: nowrap; }
-
-.nav-link:hover {
-    background: rgba(255, 255, 255, 0.055);
-    color: #fff;
-    transform: translateX(2px);
-}
-
-.nav-link:hover .nav-icon { color: #b6a9ff; }
-
-.nav-link.active {
-    background: linear-gradient(135deg, rgba(109, 94, 252, 0.22), rgba(160, 109, 252, 0.14));
-    color: #fff;
-    box-shadow: inset 0 0 0 1px rgba(109, 94, 252, 0.35);
-}
-
-.nav-link.active .nav-icon { color: #a78bfa; }
-
-.nav-link.active::before {
-    content: '';
-    position: absolute;
-    left: -14px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 4px;
-    height: 22px;
-    border-radius: 0 4px 4px 0;
-    background: linear-gradient(180deg, #6d5efc, #a06dfc);
-    box-shadow: 0 0 12px rgba(109, 94, 252, 0.7);
+.nav-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity .2s ease, max-width .25s ease;
+    max-width: 200px;
 }
 
 .nav-badge {
@@ -160,8 +212,40 @@
     font-weight: 700;
     padding: 2px 7px;
     border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(255, 77, 109, 0.4);
+    box-shadow: 0 2px 8px rgba(255,77,109,.4);
+    flex-shrink: 0;
+    transition: opacity .2s ease;
 }
+
+.nav-link:hover {
+    background: rgba(255,255,255,.055);
+    color: #fff;
+    transform: translateX(2px);
+}
+.nav-link:hover .nav-icon { color: #b6a9ff; }
+
+.nav-link.active {
+    background: linear-gradient(135deg, rgba(109,94,252,.22), rgba(160,109,252,.14));
+    color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(109,94,252,.35);
+}
+.nav-link.active .nav-icon { color: #a78bfa; }
+
+.nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 22px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, #6d5efc, #a06dfc);
+    box-shadow: 0 0 12px rgba(109,94,252,.7);
+}
+
+
+/* ── Focus card ───────────────────────────────────────────── */
 
 .focus-card {
     position: relative;
@@ -169,184 +253,199 @@
     padding: 20px 16px;
     border-radius: 16px;
     text-align: center;
-    background: linear-gradient(160deg, rgba(109, 94, 252, 0.14), rgba(160, 109, 252, 0.06));
-    border: 1px solid rgba(109, 94, 252, 0.22);
+    background: linear-gradient(160deg, rgba(109,94,252,.14), rgba(160,109,252,.06));
+    border: 1px solid rgba(109,94,252,.22);
     overflow: hidden;
+    transition: opacity .2s ease, max-height .25s ease;
 }
 
 .focus-card-glow {
     position: absolute;
-    top: -40px;
-    right: -30px;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(160, 109, 252, 0.35), transparent 70%);
+    top: -40px; right: -30px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(160,109,252,.35), transparent 70%);
     pointer-events: none;
 }
 
 .focus-icon {
-    width: 44px;
-    height: 44px;
-    margin: 0 auto 12px;
+    width: 44px; height: 44px; margin: 0 auto 12px;
     border-radius: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: #fff;
     background: linear-gradient(135deg, #6d5efc, #a06dfc);
-    box-shadow: 0 8px 20px rgba(109, 94, 252, 0.4);
+    box-shadow: 0 8px 20px rgba(109,94,252,.4);
 }
 
 .focus-title { color: #fff; font-weight: 600; font-size: .95rem; margin-bottom: 6px; }
-
 .focus-text {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: .78rem;
-    line-height: 1.5;
-    margin-bottom: 16px;
+    color: rgba(255,255,255,.5);
+    font-size: .78rem; line-height: 1.5; margin-bottom: 16px;
 }
 
 .focus-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    width: 100%;
-    padding: 9px;
-    border-radius: 10px;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 6px; width: 100%; padding: 9px; border-radius: 10px;
     background: linear-gradient(135deg, #6d5efc, #a06dfc);
-    color: #fff;
-    font-size: .84rem;
-    font-weight: 600;
+    color: #fff; font-size: .84rem; font-weight: 600;
     text-decoration: none;
-    box-shadow: 0 8px 20px rgba(109, 94, 252, 0.35);
+    box-shadow: 0 8px 20px rgba(109,94,252,.35);
     transition: all .2s ease;
 }
-
 .focus-btn:hover {
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 12px 26px rgba(109, 94, 252, 0.5);
+    box-shadow: 0 12px 26px rgba(109,94,252,.5);
 }
+
+
+/* ── Sidebar footer ───────────────────────────────────────── */
 
 .sidebar-footer {
     padding: 14px;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(255,255,255,.06);
+    flex-shrink: 0;
 }
 
 .sidebar-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 10px;
-    border-radius: 12px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: 12px;
     text-decoration: none;
     transition: background .18s ease;
+    overflow: hidden;
 }
-
-.sidebar-user:hover { background: rgba(255, 255, 255, 0.055); }
+.sidebar-user:hover { background: rgba(255,255,255,.055); }
 
 .sidebar-user-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid rgba(109, 94, 252, 0.4);
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 2px solid rgba(109,94,252,.4);
     flex-shrink: 0;
 }
 
 .sidebar-user-info {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
+    flex: 1; min-width: 0;
+    display: flex; flex-direction: column;
     line-height: 1.25;
+    transition: opacity .2s ease, max-width .25s ease;
+    max-width: 200px;
+    overflow: hidden;
 }
 
 .sidebar-user-name {
-    color: #fff;
-    font-size: .84rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: #fff; font-size: .84rem; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.sidebar-user-role  { color: rgba(255,255,255,.4); font-size: .72rem; }
+.sidebar-user-arrow { color: rgba(255,255,255,.35); font-size: .9rem; flex-shrink: 0;
+                      transition: opacity .2s ease; }
 
-.sidebar-user-role { color: rgba(255, 255, 255, 0.4); font-size: .72rem; }
-.sidebar-user-arrow { color: rgba(255, 255, 255, 0.35); font-size: .9rem; }
 
+/* ════════════════════════════════════════════════════════════
+   COLLAPSED STATE
+   ════════════════════════════════════════════════════════════ */
 
-/* ============ MAIN WRAPPER ============ */
+/* Hide text, keep icons centred */
+.sidebar.collapsed .logo-text          { opacity: 0; max-width: 0; overflow: hidden; }
+.sidebar.collapsed .nav-section-label  { opacity: 0; max-height: 0; padding: 0; overflow: hidden; }
+.sidebar.collapsed .nav-text           { opacity: 0; max-width: 0; overflow: hidden; }
+.sidebar.collapsed .nav-badge          { opacity: 0; width: 0; overflow: hidden; }
+.sidebar.collapsed .focus-card         { opacity: 0; max-height: 0; padding: 0; margin: 0; overflow: hidden; border: none; }
+.sidebar.collapsed .sidebar-user-info  { opacity: 0; max-width: 0; overflow: hidden; }
+.sidebar.collapsed .sidebar-user-arrow { opacity: 0; width: 0; overflow: hidden; }
+.sidebar.collapsed hr                  { opacity: 0; margin: 0; }
 
-.main-wrapper {
-    margin-left: 268px !important;
-    width: calc(100% - 268px) !important;
-    min-height: 100vh;
-    box-sizing: border-box;
-    transition: margin-left .25s ease, width .25s ease;
+/* Centre everything */
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    padding: 22px 0;
 }
-
-
-/* ============ COLLAPSED STATE ============ */
-
-.sidebar.collapsed {
-    width: 72px !important;
+.sidebar.collapsed .logo {
+    justify-content: center;
+    gap: 0;
 }
-
-.main-wrapper.sidebar-collapsed {
-    margin-left: 72px !important;
-    width: calc(100% - 72px) !important;
-}
-
-.sidebar.collapsed .logo-text,
-.sidebar.collapsed .nav-section-label,
-.sidebar.collapsed .nav-text,
-.sidebar.collapsed .nav-badge,
-.sidebar.collapsed .focus-card,
-.sidebar.collapsed .sidebar-user-info,
-.sidebar.collapsed .sidebar-user-arrow {
-    display: none;
-}
-
-.sidebar.collapsed .logo { justify-content: center; }
-
 .sidebar.collapsed .nav-link {
     justify-content: center;
-    padding: 11px 0;
+    padding: 12px 0;
+    gap: 0;
+}
+.sidebar.collapsed .nav-link.active::before { left: 0; }
+.sidebar.collapsed .sidebar-user {
+    justify-content: center;
+    padding: 9px 0;
+    gap: 0;
 }
 
+/* Flip chevron */
 .sidebar.collapsed .sidebar-collapse-btn i {
     transform: rotate(180deg);
 }
 
 
-/* ============ MOBILE OVERLAY ============ */
+/* ── Mobile overlay ───────────────────────────────────────── */
 
 .sidebar-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0,0,0,.45);
     z-index: 1025;
     backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
 
 
-/* ============ MOBILE ============ */
+/* ════════════════════════════════════════════════════════════
+   MOBILE  ≤ 991px
+   Sidebar slides in/out, never "collapsed"
+   Main wrapper always full width
+   ════════════════════════════════════════════════════════════ */
 
 @media (max-width: 991.98px) {
 
+    #sidebar.sidebar,
     .sidebar,
+    #sidebar.sidebar.collapsed,
     .sidebar.collapsed {
         width: 268px !important;
+        min-width: 0 !important;
         transform: translateX(-100%);
+        transition: transform .28s ease !important;
+        height: 100vh;
+        position: fixed !important;
     }
 
-    .sidebar.show { transform: translateX(0); }
+    .sidebar.show {
+        transform: translateX(0) !important;
+    }
 
+    /* Full width on mobile regardless of collapse state */
     .main-wrapper,
     .main-wrapper.sidebar-collapsed {
         margin-left: 0 !important;
         width: 100% !important;
     }
 
+    /* Reset all collapsed visual hides on mobile */
+    .sidebar.collapsed .logo-text,
+    .sidebar.collapsed .nav-section-label,
+    .sidebar.collapsed .nav-text,
+    .sidebar.collapsed .nav-badge,
+    .sidebar.collapsed .focus-card,
+    .sidebar.collapsed .sidebar-user-info,
+    .sidebar.collapsed .sidebar-user-arrow,
+    .sidebar.collapsed hr {
+        opacity: 1;
+        max-width: none;
+        max-height: none;
+        width: auto;
+        overflow: visible;
+        pointer-events: auto;
+        padding: revert;
+        margin: revert;
+        border: revert;
+    }
+
+    .sidebar.collapsed .sidebar-header { justify-content: space-between; padding: 22px 18px; }
+    .sidebar.collapsed .logo           { justify-content: flex-start; gap: 12px; }
+    .sidebar.collapsed .nav-link       { justify-content: flex-start; padding: 11px 14px; gap: 12px; }
+    .sidebar.collapsed .sidebar-user   { justify-content: flex-start; padding: 9px 10px; gap: 10px; }
+    .sidebar.collapsed .sidebar-collapse-btn i { transform: none; }
 }

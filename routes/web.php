@@ -10,6 +10,16 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientContactController;
+use App\Http\Controllers\ClientAddressController;
+use App\Http\Controllers\ClientServiceController;
+use App\Http\Controllers\ClientDocumentController;
+use App\Http\Controllers\ClientCredentialController;
+use App\Http\Controllers\ClientRemarkController;
+use App\Http\Controllers\ClientCommunicationController;
+use App\Http\Controllers\ClientTagController;
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -112,11 +122,16 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
-    Route::get('/export', [ExportController::class, 'index'])
-        ->name('export.index');
+    // Route::get('/export', [ExportController::class, 'index'])
+    //     ->name('export.index');
 
-    Route::post('/export/download', [ExportController::class, 'export'])
-        ->name('export.download');
+    // Route::post('/export/download', [ExportController::class, 'export'])
+    //     ->name('export.download');
+
+    Route::prefix('export')->name('export.')->group(function () {
+    Route::get('/',        [ExportController::class, 'index'])    ->name('index');
+    Route::post('/download', [ExportController::class, 'download'])->name('download');
+});
 
     /*
     |--------------------------------------------------------------------------
@@ -145,6 +160,55 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/{notification}/read',         [NotificationController::class, 'read'])        ->name('read');
     Route::delete('/{notification}',             [NotificationController::class, 'destroy'])     ->name('destroy');
 });
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Client Management (CRM)
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('clients', ClientController::class);
+
+Route::resource('client-contacts', ClientContactController::class);
+
+Route::resource('client-addresses', ClientAddressController::class);
+
+Route::resource('client-services', ClientServiceController::class);
+
+Route::resource('client-documents', ClientDocumentController::class);
+
+Route::resource('client-credentials', ClientCredentialController::class);
+
+Route::resource('client-remarks', ClientRemarkController::class);
+
+Route::resource('client-communications', ClientCommunicationController::class);
+
+Route::resource('client-tags', ClientTagController::class);
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Client Management
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('clients', ClientController::class);
+
+Route::post('/clients/bulk-action', [ClientController::class, 'bulkAction'])
+    ->name('clients.bulk-action');
+
+Route::patch('/clients/{client}/restore', [ClientController::class, 'restore'])
+    ->name('clients.restore');
+
+Route::get('/clients/export', [ClientController::class, 'export'])
+    ->name('clients.export');
+
+Route::post('/clients/import', [ClientController::class, 'import'])
+    ->name('clients.import');
+
 
     /*
     |--------------------------------------------------------------------------

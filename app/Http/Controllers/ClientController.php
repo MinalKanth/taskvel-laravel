@@ -20,6 +20,7 @@ use App\Models\ClientService;
 use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\JsonResponse;
+use App\Models\User;
 
 
 class ClientController extends Controller
@@ -63,11 +64,16 @@ class ClientController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        $this->authorize('create', Client::class);
 
-        return view('clients.create');
-    }
+{
+
+    $this->authorize('create', Client::class);
+
+    $users = User::orderBy('name')->get();
+
+    return view('clients.create', compact('users'));
+
+}
 
     /**
      * Store a newly created resource in storage.
@@ -79,14 +85,29 @@ class ClientController extends Controller
         DB::beginTransaction();
 
         try {
-            $client = Client::create($request->validated());
+
+            // Generate Unique Client Code
+            $lastClient = Client::latest('id')->first();
+
+            $nextNumber = $lastClient
+                ? ((int) str_replace('CLI', '', $lastClient->client_code)) + 1
+                : 1;
+
+            $data = $request->validated();
+
+            $data['client_code'] = 'CLI' . str_pad($nextNumber, 5, '0', STR_PAD_LEFT);
+
+            // Create Client
+            $client = Client::create($data);
 
             DB::commit();
 
             return redirect()
                 ->route('clients.show', $client)
                 ->with('success', 'Client created successfully.');
+
         } catch (\Throwable $e) {
+
             DB::rollBack();
 
             return back()
@@ -121,11 +142,14 @@ class ClientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    
     public function edit(Client $client)
     {
         $this->authorize('update', $client);
 
-        return view('clients.edit', compact('client'));
+        $users = User::orderBy('name')->get();
+
+        return view('clients.edit', compact('client', 'users'));
     }
 
     /**

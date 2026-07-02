@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class ClientTag extends Model
 {
@@ -24,13 +25,44 @@ class ClientTag extends Model
 
         'sort_order',
 
-        'is_active'
+        'is_active',
+
     ];
 
     protected $casts = [
 
-        'is_active'=>'boolean'
+        'sort_order' => 'integer',
+
+        'is_active' => 'boolean',
+
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Boot
+    |--------------------------------------------------------------------------
+    */
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($tag) {
+
+            if (empty($tag->slug)) {
+                $tag->slug = Str::slug($tag->name);
+            }
+
+        });
+
+        static::updating(function ($tag) {
+
+            if (empty($tag->slug)) {
+                $tag->slug = Str::slug($tag->name);
+            }
+
+        });
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -56,6 +88,22 @@ class ClientTag extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('is_active',true);
+        return $query->where('is_active', true);
+    }
+
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('sort_order');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Accessors
+    |--------------------------------------------------------------------------
+    */
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->name;
     }
 }

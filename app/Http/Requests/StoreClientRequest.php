@@ -32,12 +32,12 @@ class StoreClientRequest extends FormRequest
             |--------------------------------------------------------------------------
             */
 
-            'client_code' => [
-                'required',
-                'string',
-                'max:30',
-                'unique:clients,client_code',
-            ],
+            // 'client_code' => [
+            //     'required',
+            //     'string',
+            //     'max:30',
+            //     'unique:clients,client_code',
+            // ],
 
             'company_name' => [
                 'required',

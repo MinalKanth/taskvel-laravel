@@ -89,7 +89,7 @@
 
                 <div class="row">
 
-                    <div class="col-md-4 mb-3">
+                    {{-- <div class="col-md-4 mb-3">
 
                         <label class="form-label">
 
@@ -116,7 +116,7 @@
 
                         @enderror
 
-                    </div>
+                    </div> --}}
 
                     <div class="col-md-8 mb-3">
 
@@ -182,12 +182,59 @@
 
                         </label>
 
-                        <input
-                            type="text"
+                        <select
                             name="business_type"
-                            class="form-control @error('business_type') is-invalid @enderror"
-                            value="{{ old('business_type') }}"
-                            placeholder="Manufacturing">
+                            class="form-select @error('business_type') is-invalid @enderror">
+
+                            <option value="">
+                                Select Business Type
+                            </option>
+
+                            <option value="Proprietorship" @selected(old('business_type') == 'Proprietorship')>
+                                Proprietorship
+                            </option>
+
+                            <option value="Partnership" @selected(old('business_type') == 'Partnership')>
+                                Partnership
+                            </option>
+
+                            <option value="LLP" @selected(old('business_type') == 'LLP')>
+                                LLP
+                            </option>
+
+                            <option value="Private Limited" @selected(old('business_type') == 'Private Limited')>
+                                Private Limited
+                            </option>
+
+                            <option value="Public Limited" @selected(old('business_type') == 'Public Limited')>
+                                Public Limited
+                            </option>
+
+                            <option value="OPC" @selected(old('business_type') == 'OPC')>
+                                One Person Company (OPC)
+                            </option>
+
+                            <option value="Trust" @selected(old('business_type') == 'Trust')>
+                                Trust
+                            </option>
+
+                            <option value="Society" @selected(old('business_type') == 'Society')>
+                                Society
+                            </option>
+
+                            <option value="NGO" @selected(old('business_type') == 'NGO')>
+                                NGO
+                            </option>
+
+                            <option value="Government" @selected(old('business_type') == 'Government')>
+                                Government
+                            </option>
+
+                            <option value="Other" @selected(old('business_type') == 'Other')>
+                                Other
+                            </option>
+
+                        </select>
 
                         @error('business_type')
 
@@ -900,6 +947,285 @@
 
                             </div>
 
+                        @enderror
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ===================================================== -->
+        <!-- Bank Account Information -->
+        <!-- ===================================================== -->
+
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+
+                <h5 class="mb-0">
+
+                    <i class="mdi mdi-bank me-2"></i>
+
+                    Bank Account Information
+
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Bank Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="bank_name"
+                            class="form-control @error('bank_name') is-invalid @enderror"
+                            value="{{ old('bank_name') }}"
+                            placeholder="State Bank of India">
+
+                        @error('bank_name')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Branch Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="branch_name"
+                            class="form-control @error('branch_name') is-invalid @enderror"
+                            value="{{ old('branch_name') }}"
+                            placeholder="Guwahati Main Branch">
+
+                        @error('branch_name')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Account Holder Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="account_holder_name"
+                            class="form-control @error('account_holder_name') is-invalid @enderror"
+                            value="{{ old('account_holder_name') }}"
+                            placeholder="ABC Private Limited">
+
+                        @error('account_holder_name')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            Account Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="account_number"
+                            class="form-control @error('account_number') is-invalid @enderror"
+                            value="{{ old('account_number') }}"
+                            placeholder="123456789012">
+
+                        @error('account_number')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+                            IFSC Code
+                        </label>
+
+                        <input
+                            type="text"
+                            name="ifsc_code"
+                            class="form-control @error('ifsc_code') is-invalid @enderror"
+                            value="{{ old('ifsc_code') }}"
+                            placeholder="SBIN0000123">
+
+                        @error('ifsc_code')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+                            MICR Code
+                        </label>
+
+                        <input
+                            type="text"
+                            name="micr_code"
+                            class="form-control @error('micr_code') is-invalid @enderror"
+                            value="{{ old('micr_code') }}"
+                            placeholder="781002001">
+
+                        @error('micr_code')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+
+                        <label class="form-label">
+                            Account Type
+                        </label>
+
+                        <select
+                            name="account_type"
+                            class="form-select @error('account_type') is-invalid @enderror">
+
+                            <option value="Savings" @selected(old('account_type')=='Savings')>
+                                Savings
+                            </option>
+
+                            <option value="Current" @selected(old('account_type','Current')=='Current')>
+                                Current
+                            </option>
+
+                            <option value="Cash Credit" @selected(old('account_type')=='Cash Credit')>
+                                Cash Credit
+                            </option>
+
+                            <option value="OD" @selected(old('account_type')=='OD')>
+                                Overdraft
+                            </option>
+
+                        </select>
+
+                        @error('account_type')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label">
+                            UPI ID
+                        </label>
+
+                        <input
+                            type="text"
+                            name="upi_id"
+                            class="form-control @error('upi_id') is-invalid @enderror"
+                            value="{{ old('upi_id') }}"
+                            placeholder="company@okaxis">
+
+                        @error('upi_id')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                    </div>
+
+                    <div class="col-md-3 mb-3 d-flex align-items-end">
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="is_primary"
+                                name="is_primary"
+                                value="1"
+                                @checked(old('is_primary', true))>
+
+                            <label
+                                class="form-check-label"
+                                for="is_primary">
+
+                                Primary Account
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-3 mb-3 d-flex align-items-end">
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="bank_is_active"
+                                name="bank_is_active"
+                                value="1"
+                                @checked(old('bank_is_active', true))>
+
+                            <label
+                                class="form-check-label"
+                                for="bank_is_active">
+
+                                Active Account
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-12">
+
+                        <label class="form-label">
+                            Bank Remarks
+                        </label>
+
+                        <textarea
+                            name="bank_remarks"
+                            rows="3"
+                            class="form-control @error('bank_remarks') is-invalid @enderror"
+                            placeholder="Additional bank account notes...">{{ old('bank_remarks') }}</textarea>
+
+                        @error('bank_remarks')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
                         @enderror
 
                     </div>

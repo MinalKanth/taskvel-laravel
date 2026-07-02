@@ -32,12 +32,7 @@ class UpdateClientRequest extends FormRequest
             |--------------------------------------------------------------------------
             */
 
-            'client_code' => [
-                'required',
-                'string',
-                'max:30',
-                Rule::unique('clients', 'client_code')->ignore($clientId),
-            ],
+            
 
             'company_name' => [
                 'required',

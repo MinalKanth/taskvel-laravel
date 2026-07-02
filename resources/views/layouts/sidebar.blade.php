@@ -100,6 +100,214 @@
 
             </ul>
         </div>
+        {{-- ===================================================== --}}
+        {{-- Client Management --}}
+        {{-- ===================================================== --}}
+
+        <hr class="my-4">
+
+        <div class="nav-section">
+
+            <span class="nav-section-label">
+
+                Client Management
+
+            </span>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+
+                    <a href="{{ route('clients.index') }}"
+                    class="nav-link {{ request()->routeIs('clients.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-buildings-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Clients
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-contacts.index') }}"
+                    class="nav-link {{ request()->routeIs('client-contacts.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-person-lines-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Contacts
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-addresses.index') }}"
+                    class="nav-link {{ request()->routeIs('client-addresses.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-geo-alt-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Addresses
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-services.index') }}"
+                    class="nav-link {{ request()->routeIs('client-services.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-briefcase-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Services
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-documents.index') }}"
+                    class="nav-link {{ request()->routeIs('client-documents.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-folder-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Documents
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-credentials.index') }}"
+                    class="nav-link {{ request()->routeIs('client-credentials.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-key-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Credentials
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-remarks.index') }}"
+                    class="nav-link {{ request()->routeIs('client-remarks.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-chat-square-text-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Client Remarks
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-communications.index') }}"
+                    class="nav-link {{ request()->routeIs('client-communications.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-envelope-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Communications
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a href="{{ route('client-tags.index') }}"
+                    class="nav-link {{ request()->routeIs('client-tags.*') ? 'active' : '' }}">
+
+                        <span class="nav-icon">
+
+                            <i class="bi bi-tags-fill"></i>
+
+                        </span>
+
+                        <span class="nav-text">
+
+                            Client Tags
+
+                        </span>
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
 
         {{-- ===== Productivity Widget ===== --}}
         <div class="nav-section">
