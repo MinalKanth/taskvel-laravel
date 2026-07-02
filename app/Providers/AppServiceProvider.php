@@ -14,6 +14,22 @@ use App\Policies\ClientPolicy;
 use App\Policies\FocusSessionPolicy;
 use App\Policies\RemarkPolicy;
 use App\Policies\TaskPolicy;
+use App\Models\Client;
+use App\Models\ClientAddress;
+use App\Models\ClientCommunication;
+use App\Models\ClientContact;
+use App\Models\ClientCredential;
+use App\Models\ClientDocument;
+use App\Models\ClientRemark;
+use App\Models\ClientService;
+
+use App\Policies\ClientAddressPolicy;
+use App\Policies\ClientCommunicationPolicy;
+use App\Policies\ClientContactPolicy;
+use App\Policies\ClientCredentialPolicy;
+use App\Policies\ClientDocumentPolicy;
+use App\Policies\ClientRemarkPolicy;
+use App\Policies\ClientServicePolicy;
 
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -45,7 +61,49 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Task::class, TaskPolicy::class);
         Gate::policy(Remark::class, RemarkPolicy::class);
         Gate::policy(FocusSession::class, FocusSessionPolicy::class);
+        
+        /*
+        |--------------------------------------------------------------------------
+        | CRM Policies
+        |--------------------------------------------------------------------------
+        */
+
         Gate::policy(Client::class, ClientPolicy::class);
+
+        Gate::policy(
+            ClientContact::class,
+            ClientContactPolicy::class
+        );
+
+        Gate::policy(
+            ClientAddress::class,
+            ClientAddressPolicy::class
+        );
+
+        Gate::policy(
+            ClientService::class,
+            ClientServicePolicy::class
+        );
+
+        Gate::policy(
+            ClientDocument::class,
+            ClientDocumentPolicy::class
+        );
+
+        Gate::policy(
+            ClientCredential::class,
+            ClientCredentialPolicy::class
+        );
+
+        Gate::policy(
+            ClientRemark::class,
+            ClientRemarkPolicy::class
+        );
+
+        Gate::policy(
+            ClientCommunication::class,
+            ClientCommunicationPolicy::class
+        );
 
         /*
         |--------------------------------------------------------------------------
