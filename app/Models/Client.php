@@ -145,8 +145,10 @@ class Client extends Model
     {
         return $this->belongsToMany(
             ClientTag::class,
-            'client_tag'
-        );
+            'client_tag',
+            'client_id',
+            'client_tag_id'
+        )->withTimestamps();
     }
 
     public function assignedUser()
