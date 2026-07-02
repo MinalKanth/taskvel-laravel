@@ -22,6 +22,10 @@ use App\Models\ClientCredential;
 use App\Models\ClientDocument;
 use App\Models\ClientRemark;
 use App\Models\ClientService;
+use App\Observers\ClientDocumentObserver;
+use App\Observers\ClientCredentialObserver;
+use App\Observers\ClientRemarkObserver;
+use App\Observers\ClientCommunicationObserver;
 
 use App\Policies\ClientAddressPolicy;
 use App\Policies\ClientCommunicationPolicy;
@@ -36,6 +40,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+
+use App\Observers\ClientObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -61,6 +67,14 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Task::class, TaskPolicy::class);
         Gate::policy(Remark::class, RemarkPolicy::class);
         Gate::policy(FocusSession::class, FocusSessionPolicy::class);
+
+        Client::observe(ClientObserver::class);
+
+
+        ClientDocument::observe(ClientDocumentObserver::class);
+        ClientCredential::observe(ClientCredentialObserver::class);
+        ClientRemark::observe(ClientRemarkObserver::class);
+        ClientCommunication::observe(ClientCommunicationObserver::class);
         
         /*
         |--------------------------------------------------------------------------
