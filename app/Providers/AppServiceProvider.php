@@ -9,6 +9,7 @@ use App\Models\FocusSession;
 use App\Models\Notification;
 use App\Models\Remark;
 use App\Models\Task;
+use App\Policies\ClientPolicy;
 
 use App\Policies\FocusSessionPolicy;
 use App\Policies\RemarkPolicy;
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Task::class, TaskPolicy::class);
         Gate::policy(Remark::class, RemarkPolicy::class);
         Gate::policy(FocusSession::class, FocusSessionPolicy::class);
+        Gate::policy(Client::class, ClientPolicy::class);
 
         /*
         |--------------------------------------------------------------------------
