@@ -41,6 +41,21 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
+
+use App\Events\ClientCreated;
+use App\Events\ClientUpdated;
+use App\Events\ClientDeleted;
+use App\Events\DocumentUploaded;
+use App\Events\CredentialUpdated;
+use App\Events\RemarkCreated;
+use App\Events\CommunicationSent;
+
+use App\Listeners\CreateTimeline;
+use App\Listeners\CreateActivityLog;
+use App\Listeners\SendEmailNotification;
+use App\Listeners\SendPushNotification;
+use App\Listeners\SendWhatsappNotification;
+
 use App\Observers\ClientObserver;
 
 class AppServiceProvider extends ServiceProvider
@@ -129,6 +144,51 @@ class AppServiceProvider extends ServiceProvider
             TaskCompleted::class,
             UpdateTaskStatistics::class
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | CRM Events & Listeners
+        |--------------------------------------------------------------------------
+        */
+
+        Event::listen(ClientCreated::class, CreateTimeline::class);
+        Event::listen(ClientUpdated::class, CreateTimeline::class);
+        Event::listen(ClientDeleted::class, CreateTimeline::class);
+        Event::listen(DocumentUploaded::class, CreateTimeline::class);
+        Event::listen(CredentialUpdated::class, CreateTimeline::class);
+        Event::listen(RemarkCreated::class, CreateTimeline::class);
+        Event::listen(CommunicationSent::class, CreateTimeline::class);
+
+        Event::listen(ClientCreated::class, CreateActivityLog::class);
+        Event::listen(ClientUpdated::class, CreateActivityLog::class);
+        Event::listen(ClientDeleted::class, CreateActivityLog::class);
+        Event::listen(DocumentUploaded::class, CreateActivityLog::class);
+        Event::listen(CredentialUpdated::class, CreateActivityLog::class);
+        Event::listen(RemarkCreated::class, CreateActivityLog::class);
+        Event::listen(CommunicationSent::class, CreateActivityLog::class);
+
+        Event::listen(ClientCreated::class, SendEmailNotification::class);
+        Event::listen(ClientUpdated::class, SendEmailNotification::class);
+        Event::listen(DocumentUploaded::class, SendEmailNotification::class);
+        Event::listen(CredentialUpdated::class, SendEmailNotification::class);
+        Event::listen(RemarkCreated::class, SendEmailNotification::class);
+        Event::listen(CommunicationSent::class, SendEmailNotification::class);
+
+        Event::listen(ClientCreated::class, SendPushNotification::class);
+        Event::listen(ClientUpdated::class, SendPushNotification::class);
+        Event::listen(ClientDeleted::class, SendPushNotification::class);
+        Event::listen(DocumentUploaded::class, SendPushNotification::class);
+        Event::listen(CredentialUpdated::class, SendPushNotification::class);
+        Event::listen(RemarkCreated::class, SendPushNotification::class);
+        Event::listen(CommunicationSent::class, SendPushNotification::class);
+
+        Event::listen(ClientCreated::class, SendWhatsappNotification::class);
+        Event::listen(ClientUpdated::class, SendWhatsappNotification::class);
+        Event::listen(ClientDeleted::class, SendWhatsappNotification::class);
+        Event::listen(DocumentUploaded::class, SendWhatsappNotification::class);
+        Event::listen(CredentialUpdated::class, SendWhatsappNotification::class);
+        Event::listen(RemarkCreated::class, SendWhatsappNotification::class);
+        Event::listen(CommunicationSent::class, SendWhatsappNotification::class);
 
         /*
         |--------------------------------------------------------------------------
