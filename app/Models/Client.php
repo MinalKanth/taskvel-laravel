@@ -192,4 +192,9 @@ class Client extends Model
     {
         return "{$this->client_code} - {$this->company_name}";
     }
+    
+    public function timeline()
+{
+    return $this->hasMany(ClientTimeline::class);
+}
 }

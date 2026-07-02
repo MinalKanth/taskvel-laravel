@@ -82,4 +82,6 @@ class ClientTimeline extends Model
     {
         return $query->where('is_visible',true);
     }
+
+    
 }
