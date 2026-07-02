@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\JsonResponse;
 
+
 class ClientController extends Controller
 {
     /**
@@ -897,9 +898,58 @@ public function dashboard()
 
     ];
 
+    $crmStats = [
+
+    'total_clients' => Client::count(),
+
+    'active_clients' => Client::where('is_active', true)->count(),
+
+    'documents' => ClientDocument::count(),
+
+    'expiring_documents' => ClientDocument::whereDate(
+
+        'expiry_date',
+
+        '<=',
+
+        now()->addDays(30)
+
+    )->count(),
+
+];
+
+$recentClients = Client::latest()
+
+    ->take(5)
+
+    ->get();
+
+$expiringDocuments = ClientDocument::with('client')
+
+    ->whereDate('expiry_date', '<=', now()->addDays(30))
+
+    ->orderBy('expiry_date')
+
+    ->take(5)
+
+    ->get();
+
     return view(
         'dashboard.index',
-        compact('dashboard')
+        compact('dashboard',
+        'stats',
+
+    'recentTasks',
+
+    'remarks',
+
+    'weeklyChart',
+
+    'crmStats',
+
+    'recentClients',
+
+    'expiringDocuments')
     );
 }
 /**

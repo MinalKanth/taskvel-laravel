@@ -410,6 +410,288 @@
 
     </div>
 
+
+
+
+    <!-- CRM Statistics -->
+
+<div class="row mt-4">
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    Total Clients
+
+                </small>
+
+                <h2 class="fw-bold text-primary">
+
+                    {{ $crmStats['total_clients'] }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    Active Clients
+
+                </small>
+
+                <h2 class="fw-bold text-success">
+
+                    {{ $crmStats['active_clients'] }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    Documents
+
+                </small>
+
+                <h2 class="fw-bold text-warning">
+
+                    {{ $crmStats['documents'] }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <small class="text-muted">
+
+                    Expiring Soon
+
+                </small>
+
+                <h2 class="fw-bold text-danger">
+
+                    {{ $crmStats['expiring_documents'] }}
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-lg-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    Recent Clients
+
+                </h5>
+
+            </div>
+
+            <div class="card-body p-0">
+
+                <table class="table mb-0">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Client</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    @forelse($recentClients as $client)
+
+                        <tr>
+
+                            <td>
+
+                                <a href="{{ route('clients.show',$client) }}">
+
+                                    {{ $client->company_name }}
+
+                                </a>
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-primary">
+
+                                    {{ $client->status }}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="2" class="text-center py-4">
+
+                                No clients found.
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        <div class="col-lg-6">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0">
+
+                    Expiring Documents
+
+                </h5>
+
+            </div>
+
+            <div class="card-body p-0">
+
+                <table class="table mb-0">
+
+                    <thead>
+
+                    <tr>
+
+                        <th>Client</th>
+
+                        <th>Document</th>
+
+                        <th>Expiry</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    @forelse($expiringDocuments as $document)
+
+                        <tr>
+
+                            <td>
+
+                                {{ $document->client->company_name }}
+
+                            </td>
+
+                            <td>
+
+                                {{ $document->document_name }}
+
+                            </td>
+
+                            <td>
+
+                                <span class="badge bg-danger">
+
+                                    {{ optional($document->expiry_date)->format('d M Y') }}
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="3" class="text-center py-4">
+
+                                No expiring documents.
+
+                            </td>
+
+                        </tr>
+
+                    @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
 </div>
 
 @endsection

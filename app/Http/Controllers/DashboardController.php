@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Remark;
 use Illuminate\Http\Request;
+use App\Models\Client;
+
+use App\Models\ClientDocument;
 
 class DashboardController extends Controller
 {
@@ -127,6 +130,43 @@ class DashboardController extends Controller
             'focus_minutes'       => $focusMinutesAll,
         ];
 
+
+        $crmStats = [
+
+            'total_clients' => Client::count(),
+
+            'active_clients' => Client::where('is_active', true)->count(),
+
+            'documents' => ClientDocument::count(),
+
+            'expiring_documents' => ClientDocument::whereDate(
+
+                'expiry_date',
+
+                '<=',
+
+                now()->addDays(30)
+
+            )->count(),
+
+        ];
+
+        $recentClients = Client::latest()
+
+            ->take(5)
+
+            ->get();
+
+        $expiringDocuments = ClientDocument::with('client')
+
+            ->whereDate('expiry_date', '<=', now()->addDays(30))
+
+            ->orderBy('expiry_date')
+
+            ->take(5)
+
+            ->get();
+
         return view('dashboard', compact(
             'stats',
             'weeklyChart',
@@ -136,7 +176,20 @@ class DashboardController extends Controller
             'upcomingTasks',
             'pinnedTasks',
             'recentFocusSessions',
-            'remarks'
+            'remarks',
+            'stats',
+
+    'recentTasks',
+
+    'remarks',
+
+    'weeklyChart',
+
+    'crmStats',
+
+    'recentClients',
+
+    'expiringDocuments'
         ));
     }
 }
