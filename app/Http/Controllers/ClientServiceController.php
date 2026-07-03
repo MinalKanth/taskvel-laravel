@@ -6,6 +6,7 @@ use App\Http\Requests\StoreClientServiceRequest;
 use App\Http\Requests\UpdateClientServiceRequest;
 use App\Models\Client;
 use App\Models\ClientService;
+use App\Models\User;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -103,30 +104,33 @@ class ClientServiceController extends Controller
      * Show the form for creating a new service assignment.
      */
     public function create()
+
     {
+
         $this->authorize('create', ClientService::class);
 
-        $clients = Client::orderBy('company_name')
+        $clients = Client::orderBy('company_name')->get();
 
-            ->pluck(
-                'company_name',
-                'id'
-            );
+        $services = Service::orderBy('name')->get();
 
-        $services = Service::orderBy('name')
-
-            ->pluck(
-                'name',
-                'id'
-            );
+        $users = User::orderBy('name')->get();
 
         return view(
+
             'client-services.create',
+
             compact(
+
                 'clients',
-                'services'
+
+                'services',
+
+                'users'
+
             )
+
         );
+
     }
 /**
  * Store a newly assigned service.
@@ -225,24 +229,19 @@ public function edit(ClientService $clientService)
 {
     $this->authorize('update', $clientService);
 
-    $clients = Client::orderBy('company_name')
-        ->pluck(
-            'company_name',
-            'id'
-        );
+    $clients = Client::orderBy('company_name')->get();
 
-    $services = Service::orderBy('name')
-        ->pluck(
-            'name',
-            'id'
-        );
+    $services = Service::orderBy('name')->get();
+
+    $users = User::orderBy('name')->get();
 
     return view(
         'client-services.edit',
         compact(
             'clientService',
             'clients',
-            'services'
+            'services',
+            'users'
         )
     );
 }
