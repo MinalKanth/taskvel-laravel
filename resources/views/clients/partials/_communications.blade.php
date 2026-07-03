@@ -6,7 +6,7 @@
 
             <i class="mdi mdi-message-processing-outline me-2"></i>
 
-            Client Communications
+            Communications
 
         </h5>
 

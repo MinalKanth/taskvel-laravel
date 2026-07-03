@@ -4,6 +4,12 @@
 
 @section('content')
 
+<style>
+    .stats-card::before {
+    background: rgb(79 70 229 / 25%) !important;
+}
+</style>
+
 <div class="container-fluid">
 
     {{-- ── Page Header ──────────────────────────────────────────────────── --}}

@@ -85,14 +85,16 @@ class ClientContactController extends Controller
         $this->authorize('create', ClientContact::class);
 
         $clients = Client::orderBy('company_name')
-            ->pluck(
-                'company_name',
-                'id'
-            );
+            ->get(['id', 'client_code', 'company_name']);
+
+        $selectedClient = $request->query('client');
 
         return view(
             'client-contacts.create',
-            compact('clients')
+            compact(
+                'clients',
+                'selectedClient'
+            )
         );
     }
         /**
