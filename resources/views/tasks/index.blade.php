@@ -101,7 +101,7 @@
                     <button class="btn btn-primary btn-sm w-100">Filter</button>
                 </div>
                 <div class="col-6 col-md-1">
-                    <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary btn-sm w-100">Reset</a>
+                    <a href="{{ route('tasks.index') }}" class="btn btn-secondary btn-sm w-100">Reset</a>
                 </div>
             </form>
         </div>
@@ -213,16 +213,16 @@
                         <td>
                             <div class="d-flex gap-1">
                                 <a href="{{ route('tasks.show',$task) }}"
-                                   class="btn btn-sm btn-outline-primary" title="View">
+                                   class="btn btn-sm btn-primary" title="View">
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 <a href="{{ route('tasks.edit',$task) }}"
-                                   class="btn btn-sm btn-outline-warning" title="Edit">
+                                   class="btn btn-sm btn-warning" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <form method="POST" action="{{ route('tasks.destroy',$task) }}" class="d-inline">
                                     @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger"
+                                    <button class="btn btn-sm btn-danger"
                                             onclick="return confirm('Delete \'{{ addslashes($task->title) }}\'?')"
                                             title="Delete">
                                         <i class="bi bi-trash"></i>

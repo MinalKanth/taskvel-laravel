@@ -242,12 +242,12 @@ h4 {
     background: var(--warning);
 }
 
-.btn-outline-primary {
+.btn-primary {
     color: var(--primary);
     border-color: var(--primary);
 }
 
-.btn-outline-primary:hover {
+.btn-primary:hover {
     background: var(--primary);
     color: #fff;
 }

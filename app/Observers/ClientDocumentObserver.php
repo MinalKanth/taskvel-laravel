@@ -13,8 +13,8 @@ class ClientDocumentObserver
      */
     public function creating(ClientDocument $clientDocument): void
     {
-        if (empty($clientDocument->created_by) && auth()->check()) {
-            $clientDocument->created_by = auth()->id();
+        if (empty($clientDocument->uploaded_by) && auth()->check()) {
+            $clientDocument->uploaded_by = auth()->id();
         }
     }
 
@@ -40,7 +40,7 @@ class ClientDocumentObserver
     public function updating(ClientDocument $clientDocument): void
     {
         if (auth()->check()) {
-            $clientDocument->updated_by = auth()->id();
+            $clientDocument->uploaded_by = auth()->id();
         }
     }
 

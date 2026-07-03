@@ -87,11 +87,11 @@
             <p class="text-muted mb-0">Log a note, blocker or progress update for a task.</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('remarks.index') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('remarks.index') }}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-list me-1"></i>All Remarks
             </a>
             @if(isset($task))
-                <a href="{{ route('tasks.show', $task) }}" class="btn btn-outline-primary btn-sm">
+                <a href="{{ route('tasks.show', $task) }}" class="btn btn-primary btn-sm">
                     <i class="bi bi-arrow-left me-1"></i>Back to Task
                 </a>
             @endif
@@ -145,7 +145,7 @@
                                         </div>
                                         <div class="ms-auto">
                                             <a href="{{ route('tasks.show', $task) }}"
-                                               class="btn btn-sm btn-outline-primary" style="border-radius:8px;">
+                                               class="btn btn-sm btn-primary" style="border-radius:8px;">
                                                 <i class="bi bi-eye"></i>
                                             </a>
                                         </div>
@@ -181,7 +181,7 @@
                                 <label class="form-label fw-semibold mb-0">
                                     Remark <span class="text-danger">*</span>
                                 </label>
-                                <button type="button" class="btn btn-xs btn-outline-secondary btn-sm"
+                                <button type="button" class="btn btn-xs btn-secondary btn-sm"
                                         style="border-radius:8px;font-size:.75rem;"
                                         id="previewToggle">
                                     <i class="bi bi-eye me-1"></i>Preview
@@ -234,10 +234,10 @@
                         <button type="submit" class="btn btn-primary btn-lg fw-semibold px-4">
                             <i class="bi bi-send me-2"></i>Save Remark
                         </button>
-                        <a href="{{ route('remarks.index') }}" class="btn btn-outline-secondary btn-lg">
+                        <a href="{{ route('remarks.index') }}" class="btn btn-secondary btn-lg">
                             Cancel
                         </a>
-                        <button type="button" id="saveDraftBtn" class="btn btn-outline-secondary ms-auto"
+                        <button type="button" id="saveDraftBtn" class="btn btn-secondary ms-auto"
                                 style="border-radius:10px;font-size:.85rem;">
                             <i class="bi bi-floppy me-1"></i>Save Draft
                         </button>
@@ -290,7 +290,7 @@
                             <div class="fw-semibold" style="font-size:.88rem;">Draft saved</div>
                             <div class="text-muted" id="draftTime" style="font-size:.75rem;"></div>
                         </div>
-                        <button type="button" id="clearDraftBtn" class="btn btn-sm btn-outline-danger ms-auto"
+                        <button type="button" id="clearDraftBtn" class="btn btn-sm btn-danger ms-auto"
                                 style="border-radius:8px;font-size:.72rem;">Discard</button>
                     </div>
                 </div>

@@ -12,10 +12,10 @@
             <p class="text-muted mb-0">{{ $task->title }}</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('tasks.show', $task) }}" class="btn btn-outline-secondary">
+            <a href="{{ route('tasks.show', $task) }}" class="btn btn-secondary">
                 <i class="bi bi-eye me-1"></i>View
             </a>
-            <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('tasks.index') }}" class="btn btn-secondary">
                 <i class="bi bi-arrow-left me-1"></i>Back
             </a>
         </div>
@@ -116,7 +116,7 @@
                                     <input type="text" name="steps[]"
                                            class="form-control border-start-0 border-end-0 ps-0"
                                            value="{{ $step->title }}">
-                                    <button type="button" class="btn btn-outline-danger border remove-step">
+                                    <button type="button" class="btn btn-danger border remove-step">
                                         <i class="bi bi-x"></i>
                                     </button>
                                 </div>
@@ -127,7 +127,7 @@
                                     </span>
                                     <input type="text" name="steps[]"
                                            class="form-control border-start-0 border-end-0 ps-0" placeholder="Step 1…">
-                                    <button type="button" class="btn btn-outline-danger border remove-step">
+                                    <button type="button" class="btn btn-danger border remove-step">
                                         <i class="bi bi-x"></i>
                                     </button>
                                 </div>
@@ -257,7 +257,7 @@
                         <button type="submit" class="btn btn-success btn-lg fw-semibold">
                             <i class="bi bi-check-circle me-2"></i>Update Task
                         </button>
-                        <a href="{{ route('tasks.show', $task) }}" class="btn btn-outline-secondary">Cancel</a>
+                        <a href="{{ route('tasks.show', $task) }}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>
 
@@ -332,7 +332,7 @@ document.getElementById('addStep').addEventListener('click', function() {
             </span>
             <input type="text" name="steps[]"
                    class="form-control border-start-0 border-end-0 ps-0" placeholder="Step ${stepCount}…">
-            <button type="button" class="btn btn-outline-danger border remove-step">
+            <button type="button" class="btn btn-danger border remove-step">
                 <i class="bi bi-x"></i>
             </button>
         </div>

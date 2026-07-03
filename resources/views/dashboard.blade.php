@@ -381,7 +381,7 @@
                         <div class="section-eyebrow mb-0">Recent Activity</div>
                         <h5 class="mb-0 fw-bold">Latest Tasks</h5>
                     </div>
-                    <a href="{{ route('tasks.index') }}" class="btn btn-sm btn-outline-primary" style="border-radius:999px;">
+                    <a href="{{ route('tasks.index') }}" class="btn btn-sm btn-primary" style="border-radius:999px;">
                         View all <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>
@@ -446,11 +446,11 @@
                                 </td>
                                 <td style="padding:14px 20px;">
                                     <div class="d-flex gap-1">
-                                        <a href="{{ route('tasks.show', $task) }}" class="btn btn-xs btn-outline-primary"
+                                        <a href="{{ route('tasks.show', $task) }}" class="btn btn-xs btn-primary"
                                            style="padding:3px 8px;font-size:.75rem;border-radius:8px;">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('focus.index', ['task'=>$task->id]) }}" class="btn btn-xs btn-outline-success"
+                                        <a href="{{ route('focus.index', ['task'=>$task->id]) }}" class="btn btn-xs btn-success"
                                            style="padding:3px 8px;font-size:.75rem;border-radius:8px;" title="Focus">
                                             <i class="bi bi-play-fill"></i>
                                         </a>

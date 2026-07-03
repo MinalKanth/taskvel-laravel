@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\User;
 
 class ClientDocumentController extends Controller
 {
@@ -33,11 +34,11 @@ class ClientDocumentController extends Controller
 
         }
 
-        if ($request->filled('document_type')) {
+        if ($request->filled('category')) {
 
             $query->where(
-                'document_type',
-                $request->document_type
+                'category',
+                $request->category
             );
 
         }
@@ -58,7 +59,7 @@ class ClientDocumentController extends Controller
             $query->where(function ($q) use ($search) {
 
                 $q->where(
-                    'document_name',
+                    'title',
                     'like',
                     "%{$search}%"
                 )
@@ -78,9 +79,14 @@ class ClientDocumentController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        $clients = Client::orderBy('company_name')->get();
+
         return view(
             'client-documents.index',
-            compact('documents')
+            compact(
+                'documents',
+                'clients'
+            )
         );
     }
 
@@ -88,26 +94,37 @@ class ClientDocumentController extends Controller
      * Show upload page.
      */
     public function create()
-    {
-        $this->authorize('create', ClientDocument::class);
 
-        $clients = Client::orderBy('company_name')
-            ->pluck(
-                'company_name',
-                'id'
-            );
+{
 
-        return view(
-            'client-documents.create',
-            compact('clients')
-        );
-    }
+    $this->authorize('create', ClientDocument::class);
+
+    $clients = Client::orderBy('company_name')->get();
+
+    $users = User::orderBy('name')->get();
+
+    return view(
+
+        'client-documents.create',
+
+        compact(
+
+            'clients',
+
+            'users'
+
+        )
+
+    );
+
+}
 
     /**
  * Store a newly uploaded document.
  */
 public function store(StoreClientDocumentRequest $request)
 {
+    
     $this->authorize('create', ClientDocument::class);
 
     DB::beginTransaction();
@@ -118,37 +135,63 @@ public function store(StoreClientDocumentRequest $request)
 
         /*
         |--------------------------------------------------------------------------
+        | Boolean Fields
+        |--------------------------------------------------------------------------
+        */
+
+        $data['is_confidential'] = $request->boolean('is_confidential');
+
+        $data['is_downloadable'] = $request->boolean('is_downloadable');
+
+        $data['is_active'] = $request->boolean('is_active', true);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Uploaded By
+        |--------------------------------------------------------------------------
+        */
+
+        $data['uploaded_by'] = auth()->id();
+
+        /*
+        |--------------------------------------------------------------------------
         | Upload Document
         |--------------------------------------------------------------------------
         */
 
         if ($request->hasFile('document')) {
 
-            $data['file_path'] = $request
-                ->file('document')
-                ->store(
-                    'client-documents',
-                    'public'
-                );
+            $file = $request->file('document');
 
-            $data['original_file_name'] =
-                $request->file('document')
-                    ->getClientOriginalName();
+            $data['file_path'] = $file->store(
+                'client-documents',
+                'public'
+            );
 
-            $data['file_size'] =
-                $request->file('document')
-                    ->getSize();
+            $data['original_name'] = $file->getClientOriginalName();
 
-            $data['mime_type'] =
-                $request->file('document')
-                    ->getMimeType();
+            $data['file_name'] = basename($data['file_path']);
+
+            $data['disk'] = 'public';
+
+            $data['extension'] = $file->getClientOriginalExtension();
+
+            $data['mime_type'] = $file->getMimeType();
+
+            $data['file_size'] = $file->getSize();
 
         }
+        
 
-        $document = ClientDocument::create($data);
+        // $document = ClientDocument::create($data);
+        $document = new ClientDocument($data);
 
+
+
+        $document->save();
         DB::commit();
 
+// dd($document, $request->all());
         return redirect()
             ->route(
                 'client-documents.show',
@@ -162,6 +205,13 @@ public function store(StoreClientDocumentRequest $request)
     } catch (\Throwable $e) {
 
         DB::rollBack();
+
+        if (
+            isset($data['file_path']) &&
+            Storage::disk('public')->exists($data['file_path'])
+        ) {
+            Storage::disk('public')->delete($data['file_path']);
+        }
 
         return back()
             ->withInput()
@@ -199,25 +249,37 @@ public function show(ClientDocument $clientDocument)
  * Show edit form.
  */
 public function edit(ClientDocument $clientDocument)
+
 {
+
     $this->authorize(
+
         'update',
+
         $clientDocument
+
     );
 
-    $clients = Client::orderBy('company_name')
-        ->pluck(
-            'company_name',
-            'id'
-        );
+    $clients = Client::orderBy('company_name')->get();
+
+    $users = User::orderBy('name')->get();
 
     return view(
+
         'client-documents.edit',
+
         compact(
+
             'clientDocument',
-            'clients'
+
+            'clients',
+
+            'users'
+
         )
+
     );
+
 }
 
 /**
@@ -267,7 +329,7 @@ public function update(
                     'public'
                 );
 
-            $data['original_file_name'] =
+            $data['original_name'] =
                 $request->file('document')
                     ->getClientOriginalName();
 
@@ -381,14 +443,14 @@ public function trashed(Request $request)
 
     }
 
-    if ($request->filled('document_type')) {
+    if ($request->filled('category')) {
 
-        $query->where(
-            'document_type',
-            $request->document_type
-        );
+    $query->where(
+        'category',
+        $request->category
+    );
 
-    }
+}
 
     if ($request->filled('search')) {
 
@@ -397,7 +459,7 @@ public function trashed(Request $request)
         $query->where(function ($q) use ($search) {
 
             $q->where(
-                'document_name',
+                'title',
                 'like',
                 "%{$search}%"
             )
@@ -720,7 +782,7 @@ public function download(ClientDocument $clientDocument)
 
     return Storage::disk('public')->download(
         $clientDocument->file_path,
-        $clientDocument->original_file_name
+        $clientDocument->original_name
     );
 }
 /**
@@ -753,56 +815,48 @@ public function replace(
     $this->authorize('update', $clientDocument);
 
     $request->validate([
-
-        'document'=>[
+        'document' => [
             'required',
             'file',
             'max:10240',
         ],
-
     ]);
 
     DB::beginTransaction();
 
-    try{
+    try {
 
-        if(
+        if (
             $clientDocument->file_path &&
-            Storage::disk('public')->exists(
-                $clientDocument->file_path
-            )
-        ){
-
-            Storage::disk('public')->delete(
-                $clientDocument->file_path
-            );
-
+            Storage::disk('public')->exists($clientDocument->file_path)
+        ) {
+            Storage::disk('public')->delete($clientDocument->file_path);
         }
 
-        $path = $request
+        $file = $request->file('document');
 
-            ->file('document')
-
-            ->store(
-                'client-documents',
-                'public'
-            );
+        $path = $file->store(
+            'client-documents',
+            'public'
+        );
 
         $clientDocument->update([
 
-            'file_path'=>$path,
+            'file_path' => $path,
 
-            'original_file_name'=>$request
-                ->file('document')
-                ->getClientOriginalName(),
+            'original_name' => $file->getClientOriginalName(),
 
-            'file_size'=>$request
-                ->file('document')
-                ->getSize(),
+            'file_name' => basename($path),
 
-            'mime_type'=>$request
-                ->file('document')
-                ->getMimeType(),
+            'disk' => 'public',
+
+            'extension' => $file->getClientOriginalExtension(),
+
+            'mime_type' => $file->getMimeType(),
+
+            'file_size' => $file->getSize(),
+
+            'uploaded_by' => auth()->id(),
 
         ]);
 
@@ -813,9 +867,7 @@ public function replace(
             'Document replaced successfully.'
         );
 
-    }
-
-    catch(\Throwable $e){
+    } catch (\Throwable $e) {
 
         DB::rollBack();
 
@@ -838,17 +890,17 @@ public function multipleUpload(Request $request)
 
     $request->validate([
 
-        'client_id'=>[
+        'client_id' => [
             'required',
             'exists:clients,id',
         ],
 
-        'documents'=>[
+        'documents' => [
             'required',
             'array',
         ],
 
-        'documents.*'=>[
+        'documents.*' => [
             'file',
             'max:10240',
         ],
@@ -857,27 +909,55 @@ public function multipleUpload(Request $request)
 
     DB::beginTransaction();
 
-    try{
+    try {
 
-        foreach($request->file('documents') as $file){
+        foreach ($request->file('documents') as $file) {
+
+            $path = $file->store(
+                'client-documents',
+                'public'
+            );
 
             ClientDocument::create([
 
-                'client_id'=>$request->client_id,
+                'client_id' => $request->client_id,
 
-                'document_name'=>$file->getClientOriginalName(),
+                'category' => 'Other',
 
-                'file_path'=>$file->store(
-                    'client-documents',
-                    'public'
+                'title' => pathinfo(
+                    $file->getClientOriginalName(),
+                    PATHINFO_FILENAME
                 ),
 
-                'original_file_name'=>$file
-                    ->getClientOriginalName(),
+                'document_number' => null,
 
-                'file_size'=>$file->getSize(),
+                'description' => null,
 
-                'mime_type'=>$file->getMimeType(),
+                'original_name' => $file->getClientOriginalName(),
+
+                'file_name' => basename($path),
+
+                'file_path' => $path,
+
+                'disk' => 'public',
+
+                'extension' => $file->getClientOriginalExtension(),
+
+                'mime_type' => $file->getMimeType(),
+
+                'file_size' => $file->getSize(),
+
+                'version' => '1.0',
+
+                'status' => 'Pending',
+
+                'is_confidential' => false,
+
+                'is_downloadable' => true,
+
+                'uploaded_by' => auth()->id(),
+
+                'is_active' => true,
 
             ]);
 
@@ -890,9 +970,7 @@ public function multipleUpload(Request $request)
             'Documents uploaded successfully.'
         );
 
-    }
-
-    catch(\Throwable $e){
+    } catch (\Throwable $e) {
 
         DB::rollBack();
 
@@ -902,7 +980,6 @@ public function multipleUpload(Request $request)
         );
 
     }
-
 }
 /**
  * Download all client documents
@@ -950,7 +1027,7 @@ public function downloadZip(Client $client)
                     $document->file_path
                 ),
 
-                $document->original_file_name
+                $document->original_name
 
             );
 

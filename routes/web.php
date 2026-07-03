@@ -187,8 +187,123 @@ Route::resource('client-communications', ClientCommunicationController::class);
 
 Route::resource('client-tags', ClientTagController::class);
 
+Route::resource('client-documents', ClientDocumentController::class);
 
+Route::get(
+    'client-documents/{clientDocument}/download',
+    [ClientDocumentController::class, 'download']
+)->name('client-documents.download');
 
+Route::get(
+    'client-documents/{clientDocument}/preview',
+    [ClientDocumentController::class, 'preview']
+)->name('client-documents.preview');
+
+Route::post(
+    'client-documents/{clientDocument}/replace',
+    [ClientDocumentController::class, 'replace']
+)->name('client-documents.replace');
+
+Route::get(
+    'client-documents/{clientDocument}/view-pdf',
+    [ClientDocumentController::class, 'viewPdf']
+)->name('client-documents.view-pdf');
+
+Route::get(
+
+    'client-documents/trashed',
+
+    [ClientDocumentController::class, 'trashed']
+
+)->name('client-documents.trashed');
+
+Route::post(
+
+    'client-documents/bulk-delete',
+
+    [ClientDocumentController::class, 'bulkDelete']
+
+)->name('client-documents.bulk-delete');
+
+Route::post(
+
+    'client-documents/bulk-restore',
+
+    [ClientDocumentController::class, 'bulkRestore']
+
+)->name('client-documents.bulk-restore');
+
+Route::delete(
+
+    'client-documents/empty-trash',
+
+    [ClientDocumentController::class, 'emptyTrash']
+
+)->name('client-documents.empty-trash');
+
+Route::post(
+
+    'client-documents/{id}/restore',
+
+    [ClientDocumentController::class, 'restore']
+
+)->name('client-documents.restore');
+
+Route::delete(
+
+    'client-documents/{id}/force-delete',
+
+    [ClientDocumentController::class, 'forceDelete']
+
+)->name('client-documents.force-delete');
+
+Route::get(
+
+    'client-documents/{clientDocument}/download',
+
+    [ClientDocumentController::class, 'download']
+
+)->name('client-documents.download');
+
+Route::get(
+
+    'client-documents/{clientDocument}/preview',
+
+    [ClientDocumentController::class, 'preview']
+
+)->name('client-documents.preview');
+
+Route::post(
+
+    'client-documents/{clientDocument}/replace',
+
+    [ClientDocumentController::class, 'replace']
+
+)->name('client-documents.replace');
+
+Route::get(
+
+    'client-documents/{clientDocument}/view-pdf',
+
+    [ClientDocumentController::class, 'viewPdf']
+
+)->name('client-documents.view-pdf');
+
+Route::post(
+
+    'client-documents/multiple-upload',
+
+    [ClientDocumentController::class, 'multipleUpload']
+
+)->name('client-documents.multiple-upload');
+
+Route::get(
+
+    'clients/{client}/documents/download-zip',
+
+    [ClientDocumentController::class, 'downloadZip']
+
+)->name('client-documents.download-zip');
 /*
 |--------------------------------------------------------------------------
 | Client Management
@@ -220,7 +335,7 @@ Route::prefix('client-addresses')
             ->name('export');
 
     });
-    
+
     /*
     |--------------------------------------------------------------------------
     | Theme

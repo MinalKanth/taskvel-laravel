@@ -51,7 +51,7 @@
                         </button>
 
                         <a href="{{ route('dashboard') }}"
-                           class="btn btn-outline-secondary btn-lg">
+                           class="btn btn-secondary btn-lg">
 
                             <i class="bi bi-house-door me-2"></i>
 

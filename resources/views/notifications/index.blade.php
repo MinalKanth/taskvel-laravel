@@ -301,7 +301,7 @@
                 <i class="bi bi-check2-all me-1"></i>Mark selected read
             </button>
         </form>
-        <button class="btn btn-sm btn-outline-danger ms-auto" style="border-radius:8px;" id="bulkDeleteBtn">
+        <button class="btn btn-sm btn-danger ms-auto" style="border-radius:8px;" id="bulkDeleteBtn">
             <i class="bi bi-trash me-1"></i>Delete selected
         </button>
     </div>
@@ -452,7 +452,7 @@
                     @endif
                 </p>
                 @if($activeFilter !== 'all' || $activeType)
-                    <a href="{{ route('notifications.index') }}" class="btn btn-outline-primary mt-3 btn-sm">
+                    <a href="{{ route('notifications.index') }}" class="btn btn-primary mt-3 btn-sm">
                         <i class="bi bi-x me-1"></i>Clear filters
                     </a>
                 @endif

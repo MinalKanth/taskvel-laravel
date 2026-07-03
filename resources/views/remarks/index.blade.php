@@ -217,7 +217,7 @@ mark { background: #fef3c7; color: #92400e; padding: 0 2px; border-radius: 3px; 
                 </div>
                 @if(request()->hasAny(['search','task_id','date_filter','sort']))
                     <div class="col-3 col-md-auto">
-                        <a href="{{ route('remarks.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ route('remarks.index') }}" class="btn btn-secondary btn-sm">
                             <i class="bi bi-x me-1"></i>Clear
                         </a>
                     </div>

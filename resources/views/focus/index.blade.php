@@ -13,10 +13,10 @@
             <p class="text-muted mb-0">Deep work, on your terms.</p>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#settingsModal">
+            <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#settingsModal">
                 <i class="bi bi-gear me-1"></i>Settings
             </button>
-            <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('dashboard') }}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>Dashboard
             </a>
         </div>
@@ -140,10 +140,10 @@
                         <button id="pauseBtn"  class="btn btn-warning btn-lg px-4 fw-semibold">
                             <i class="bi bi-pause-fill me-2"></i>Pause
                         </button>
-                        <button id="resetBtn"  class="btn btn-outline-secondary btn-lg px-4">
+                        <button id="resetBtn"  class="btn btn-secondary btn-lg px-4">
                             <i class="bi bi-arrow-counterclockwise me-2"></i>Reset
                         </button>
-                        <button id="skipBtn"   class="btn btn-outline-primary btn-lg px-4" title="Skip to next">
+                        <button id="skipBtn"   class="btn btn-primary btn-lg px-4" title="Skip to next">
                             <i class="bi bi-skip-forward-fill me-2"></i>Skip
                         </button>
                     </div>
@@ -194,10 +194,10 @@
                             <button id="stopStopwatch"   class="btn btn-warning px-4 fw-semibold">
                                 <i class="bi bi-pause-fill me-1"></i>Pause
                             </button>
-                            <button id="lapStopwatch"    class="btn btn-outline-primary px-4">
+                            <button id="lapStopwatch"    class="btn btn-primary px-4">
                                 <i class="bi bi-flag me-1"></i>Lap
                             </button>
-                            <button id="resetStopwatch"  class="btn btn-outline-secondary px-4">
+                            <button id="resetStopwatch"  class="btn btn-secondary px-4">
                                 <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
                             </button>
                         </div>
@@ -254,7 +254,7 @@
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold"><i class="bi bi-trophy me-2 text-primary"></i>Daily Goal</h5>
-                    <button class="btn btn-sm btn-outline-secondary" id="editGoalBtn">Edit</button>
+                    <button class="btn btn-sm btn-secondary" id="editGoalBtn">Edit</button>
                 </div>
                 <div class="card-body">
                     <div class="goal-label d-flex justify-content-between mb-2">
@@ -457,7 +457,7 @@
 
             </div>
             <div class="modal-footer border-top">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary fw-semibold" id="saveSettings">
                     <i class="bi bi-check-circle me-1"></i>Save Settings
                 </button>

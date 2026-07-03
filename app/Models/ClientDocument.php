@@ -11,57 +11,69 @@ class ClientDocument extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'client_id',
-        'document_type',
-        'document_name',
-        'document_number',
-        'file_name',
-        'original_file_name',
-        'file_path',
-        'file_size',
-        'mime_type',
-        'issue_date',
-        'expiry_date',
-        'issued_by',
-        'verification_status',
-        'verified_by',
-        'verified_at',
-        'is_required',
-        'is_active',
-        'remarks',
-        'metadata',
-        'created_by',
-        'updated_by',
-    ];
+    'client_id',
+
+    'category',
+    'title',
+    'document_number',
+    'description',
+
+    'original_name',
+    'file_name',
+    'file_path',
+    'disk',
+    'extension',
+    'mime_type',
+    'file_size',
+
+    'version',
+
+    'issue_date',
+    'expiry_date',
+
+    'status',
+
+    'is_confidential',
+    'is_downloadable',
+
+    'uploaded_by',
+    'approved_by',
+    'approved_at',
+
+    'remarks',
+
+    'is_active',
+];
 
     protected $casts = [
-        'issue_date' => 'date',
-        'expiry_date' => 'date',
-        'verified_at' => 'datetime',
-        'is_required' => 'boolean',
-        'is_active' => 'boolean',
-        'metadata' => 'array',
-    ];
+
+    'issue_date' => 'date',
+
+    'expiry_date' => 'date',
+
+    'approved_at' => 'datetime',
+
+    'is_confidential' => 'boolean',
+
+    'is_downloadable' => 'boolean',
+
+    'is_active' => 'boolean',
+
+];
 
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
+    
 
-    public function updater()
-    {
-        return $this->belongsTo(User::class, 'updated_by');
-    }
+public function approver()
+{
+    return $this->belongsTo(User::class, 'approved_by');
+}
 
-    public function verifier()
-    {
-        return $this->belongsTo(User::class, 'verified_by');
-    }
+    
 
     public function scopeActive($query)
     {

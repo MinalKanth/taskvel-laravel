@@ -410,7 +410,7 @@
                 <a
                     href="https://maps.google.com/?q={{ $clientAddress->latitude }},{{ $clientAddress->longitude }}"
                     target="_blank"
-                    class="btn btn-outline-primary">
+                    class="btn btn-primary">
 
                     <i class="mdi mdi-google-maps me-1"></i>
 

@@ -47,21 +47,21 @@
             {{-- Favorite toggle --}}
             <form method="POST" action="{{ route('tasks.favorite', $task) }}" class="d-inline">
                 @csrf
-                <button class="btn {{ $task->is_favorite ? 'btn-warning' : 'btn-outline-warning' }}" title="Toggle Favorite">
+                <button class="btn {{ $task->is_favorite ? 'btn-warning' : 'btn-warning' }}" title="Toggle Favorite">
                     <i class="bi bi-star{{ $task->is_favorite ? '-fill' : '' }}"></i>
                 </button>
             </form>
             {{-- Archive --}}
             <form method="POST" action="{{ route('tasks.archive', $task) }}" class="d-inline">
                 @csrf
-                <button class="btn btn-outline-secondary" title="Archive">
+                <button class="btn btn-secondary" title="Archive">
                     <i class="bi bi-archive"></i>
                 </button>
             </form>
             <form action="{{ route('tasks.destroy', $task) }}" method="POST"
                   onsubmit="return confirm('Delete this task?')" class="d-inline">
                 @csrf @method('DELETE')
-                <button class="btn btn-outline-danger" title="Delete">
+                <button class="btn btn-danger" title="Delete">
                     <i class="bi bi-trash"></i>
                 </button>
             </form>
@@ -301,10 +301,10 @@
                     <a href="{{ route('tasks.edit', $task) }}" class="btn btn-warning">
                         <i class="bi bi-pencil me-2"></i>Edit Task
                     </a>
-                    <a href="{{ route('tasks.create') }}" class="btn btn-outline-primary">
+                    <a href="{{ route('tasks.create') }}" class="btn btn-primary">
                         <i class="bi bi-plus-circle me-2"></i>New Task
                     </a>
-                    <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary">
+                    <a href="{{ route('tasks.index') }}" class="btn btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i>All Tasks
                     </a>
                 </div>

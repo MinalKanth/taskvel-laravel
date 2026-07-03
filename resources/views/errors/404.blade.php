@@ -52,7 +52,7 @@
 
                         <button
                             onclick="history.back()"
-                            class="btn btn-outline-secondary btn-lg">
+                            class="btn btn-secondary btn-lg">
 
                             <i class="bi bi-arrow-left me-2"></i>
 

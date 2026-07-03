@@ -62,10 +62,10 @@
             </p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('remarks.index') }}" class="btn btn-outline-secondary btn-sm">
+            <a href="{{ route('remarks.index') }}" class="btn btn-secondary btn-sm">
                 <i class="bi bi-list me-1"></i>All Remarks
             </a>
-            <a href="{{ route('tasks.show', $remark->task) }}" class="btn btn-outline-primary btn-sm">
+            <a href="{{ route('tasks.show', $remark->task) }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>Back to Task
             </a>
         </div>
@@ -118,7 +118,7 @@
 
                         {{-- Original remark (collapsed) --}}
                         <div class="mb-4">
-                            <button type="button" class="btn btn-sm btn-outline-secondary mb-2"
+                            <button type="button" class="btn btn-sm btn-secondary mb-2"
                                     style="border-radius:8px;font-size:.78rem;"
                                     data-bs-toggle="collapse" data-bs-target="#originalRemark">
                                 <i class="bi bi-clock-history me-1"></i>Show original
@@ -137,7 +137,7 @@
                                 <label class="form-label fw-semibold mb-0">
                                     Updated Remark <span class="text-danger">*</span>
                                 </label>
-                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                <button type="button" class="btn btn-sm btn-secondary"
                                         style="border-radius:8px;font-size:.75rem;" id="previewToggle">
                                     <i class="bi bi-eye me-1"></i>Preview
                                 </button>
@@ -184,13 +184,13 @@
                         <button type="submit" class="btn btn-success btn-lg fw-semibold px-4">
                             <i class="bi bi-check-circle me-2"></i>Update Remark
                         </button>
-                        <a href="{{ route('remarks.index') }}" class="btn btn-outline-secondary btn-lg">Cancel</a>
+                        <a href="{{ route('remarks.index') }}" class="btn btn-secondary btn-lg">Cancel</a>
 
                         {{-- Delete --}}
                         <form method="POST" action="{{ route('remarks.destroy', $remark) }}"
                               class="ms-auto" onsubmit="return confirm('Delete this remark permanently?')">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger">
+                            <button type="submit" class="btn btn-danger">
                                 <i class="bi bi-trash me-1"></i>Delete
                             </button>
                         </form>
