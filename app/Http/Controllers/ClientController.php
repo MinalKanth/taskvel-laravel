@@ -80,6 +80,7 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
+        // dd($request->all());
         $this->authorize('create', Client::class);
 
         DB::beginTransaction();
@@ -157,6 +158,7 @@ class ClientController extends Controller
      */
     public function update(UpdateClientRequest $request, Client $client)
     {
+        // dd($request->all());
         $this->authorize('update', $client);
 
         DB::beginTransaction();
