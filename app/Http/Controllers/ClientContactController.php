@@ -176,11 +176,13 @@ class ClientContactController extends Controller
     {
         $this->authorize('update', $clientContact);
 
-        $clients = Client::orderBy('company_name')
-            ->pluck(
-                'company_name',
-                'id'
-            );
+        $clients = Client::select(
+                'id',
+                'client_code',
+                'company_name'
+            )
+            ->orderBy('company_name')
+            ->get();
 
         return view(
             'client-contacts.edit',

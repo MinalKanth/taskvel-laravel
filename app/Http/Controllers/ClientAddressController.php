@@ -110,19 +110,30 @@ class ClientAddressController extends Controller
     /**
      * Show the form for creating a new address.
      */
-    public function create()
+    public function create(Request $request)
     {
         $this->authorize('create', ClientAddress::class);
 
-        $clients = Client::orderBy('company_name')
-            ->pluck(
-                'company_name',
-                'id'
-            );
+        $clients = Client::select(
+                'id',
+                'client_code',
+                'company_name'
+            )
+            ->orderBy('company_name')
+            ->get();
+
+        $selectedClient = null;
+
+        if ($request->filled('client')) {
+            $selectedClient = Client::find($request->client);
+        }
 
         return view(
             'client-addresses.create',
-            compact('clients')
+            compact(
+                'clients',
+                'selectedClient'
+            )
         );
     }
 
@@ -204,10 +215,12 @@ class ClientAddressController extends Controller
         $this->authorize('update', $clientAddress);
 
         $clients = Client::orderBy('company_name')
-            ->pluck(
-                'company_name',
-                'id'
-            );
+            ->select(
+                'id',
+                'client_code',
+                'company_name'
+            )
+            ->get();
 
         return view(
             'client-addresses.edit',

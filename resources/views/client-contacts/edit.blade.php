@@ -122,13 +122,13 @@
 
                             @foreach($clients as $client)
 
-                                <option
-                                    value="{{ $client->id }}"
-                                    @selected(old('client_id', $clientContact->client_id) == $client->id)>
+                            <option
+                                value="{{ $client->id }}"
+                                @selected(old('client_id', $clientContact->client_id) == $client->id)>
 
-                                    {{ $client->client_code }} - {{ $client->company_name }}
+                                {{ $client->client_code }} - {{ $client->company_name }}
 
-                                </option>
+                            </option>
 
                             @endforeach
 

@@ -209,7 +209,18 @@ Route::get('/clients/export', [ClientController::class, 'export'])
 Route::post('/clients/import', [ClientController::class, 'import'])
     ->name('clients.import');
 
+Route::prefix('client-addresses')
+    ->name('client-addresses.')
+    ->group(function () {
 
+        Route::post('/bulk-action', [ClientAddressController::class, 'bulkAction'])
+            ->name('bulk-action');
+
+        Route::get('/export', [ClientAddressController::class, 'export'])
+            ->name('export');
+
+    });
+    
     /*
     |--------------------------------------------------------------------------
     | Theme

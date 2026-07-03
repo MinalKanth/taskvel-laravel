@@ -28,6 +28,7 @@
     <div class="card-body">
 
         <div class="row">
+            <input type="hidden" name="client_id" value="6">
 
             @forelse($client->addresses as $address)
 
