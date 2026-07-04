@@ -304,6 +304,44 @@
                     </a>
 
                 </li>
+                <li class="nav-item">
+
+                <a href="{{ route('chat.index') }}"
+                class="nav-link {{ request()->routeIs('chat.*') ? 'active' : '' }} position-relative">
+
+                    {{-- ICON --}}
+                    <span class="nav-icon">
+                        <i class="bi bi-chat-dots-fill"></i>
+                    </span>
+
+                    {{-- TEXT --}}
+                    <span class="nav-text">
+                        Messages
+                    </span>
+
+                    {{-- UNREAD BADGE --}}
+                    @php
+                        $chatUnread = \App\Models\Message::whereHas('conversation', function($q) {
+                            $q->where('user_id', auth()->id())
+                            ->orWhere('admin_id', auth()->id());
+                        })
+                        ->whereNull('read_at')
+                        ->where('sender_id', '!=', auth()->id())
+                        ->count();
+                    @endphp
+
+                    @if($chatUnread > 0)
+                        <span class="nav-badge bg-danger">
+                            {{ $chatUnread }}
+                        </span>
+                    @endif
+
+                    {{-- LIVE DOT --}}
+                    <span class="chat-live-dot"></span>
+
+                </a>
+
+            </li>
 
             </ul>
 

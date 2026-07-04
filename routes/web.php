@@ -19,6 +19,8 @@ use App\Http\Controllers\ClientCredentialController;
 use App\Http\Controllers\ClientRemarkController;
 use App\Http\Controllers\ClientCommunicationController;
 use App\Http\Controllers\ClientTagController;
+use App\Http\Controllers\ChatController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -624,6 +626,31 @@ Route::delete(
     'client-credentials/bulk-delete',
     [ClientCredentialController::class, 'bulkDelete']
 )->name('client-credentials.bulk-delete');
+
+
+Route::middleware(['auth'])
+    ->prefix('chat')
+    ->name('chat.')
+    ->group(function () {
+
+        // inbox
+        Route::get('/', [ChatController::class, 'index'])->name('index');
+
+        // create/start conversation (FIXED MISSING ROUTE)
+        Route::get('/start', [ChatController::class, 'start'])->name('start');
+
+        // open chat
+        Route::get('/{conversation}', [ChatController::class, 'show'])->name('show');
+
+        // send message
+        Route::post('/{conversation}/send', [ChatController::class, 'send'])->name('send');
+
+        // inbox live data (AJAX refresh)
+        Route::get('/inbox/data', [ChatController::class, 'inboxData'])->name('inbox.data');
+
+        // messages API (polling)
+        Route::get('/{conversation}/messages', [ChatController::class, 'messages'])->name('messages');
+    });
 
     /*
     |--------------------------------------------------------------------------

@@ -36,6 +36,35 @@
     <link rel="stylesheet" href="{{ asset('assets/css/sidebar.css') }}">
 
     @stack('styles')
+    <style>
+        .chat-live-dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    position: absolute;
+    right: 38px;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px rgba(34,197,94,0.8);
+    animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+    0% {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-50%) scale(1.4);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+    }
+}
+</style>
 
 </head>
 
