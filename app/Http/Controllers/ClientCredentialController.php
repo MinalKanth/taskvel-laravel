@@ -9,7 +9,7 @@ use App\Models\ClientCredential;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Crypt;
+// use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -19,99 +19,99 @@ class ClientCredentialController extends Controller
      * Display all credentials.
      */
     public function index(Request $request)
-    {
-        $this->authorize('viewAny', ClientCredential::class);
+{
+    $this->authorize('viewAny', ClientCredential::class);
 
-        $query = ClientCredential::query()
-            ->with('client');
+    $query = ClientCredential::query()
+        ->with('client');
 
-        if ($request->filled('client_id')) {
+    if ($request->filled('client_id')) {
 
-            $query->where(
-                'client_id',
-                $request->client_id
-            );
-
-        }
-
-        if ($request->filled('credential_type')) {
-
-            $query->where(
-                'credential_type',
-                $request->credential_type
-            );
-
-        }
-
-        if ($request->filled('status')) {
-
-            $query->where(
-                'status',
-                $request->status
-            );
-
-        }
-
-        if ($request->filled('search')) {
-
-            $search = trim($request->search);
-
-            $query->where(function ($q) use ($search) {
-
-                $q->where(
-                    'portal_name',
-                    'like',
-                    "%{$search}%"
-                )
-
-                ->orWhere(
-                    'username',
-                    'like',
-                    "%{$search}%"
-                )
-
-                ->orWhere(
-                    'email',
-                    'like',
-                    "%{$search}%"
-                );
-
-            });
-
-        }
-
-        $credentials = $query
-            ->latest()
-            ->paginate(20)
-            ->withQueryString();
-
-        return view(
-            'client-credentials.index',
-            compact('credentials')
+        $query->where(
+            'client_id',
+            $request->client_id
         );
+
     }
+
+    if ($request->filled('portal')) {
+
+        $query->where(
+            'portal',
+            $request->portal
+        );
+
+    }
+
+    if ($request->filled('is_active')) {
+
+        $query->where(
+            'is_active',
+            $request->is_active
+        );
+
+    }
+
+    if ($request->filled('search')) {
+
+        $search = trim($request->search);
+
+        $query->where(function ($q) use ($search) {
+
+            $q->where(
+                'portal_name',
+                'like',
+                "%{$search}%"
+            )
+            ->orWhere(
+                'username',
+                'like',
+                "%{$search}%"
+            )
+            ->orWhere(
+                'registered_email',
+                'like',
+                "%{$search}%"
+            );
+
+        });
+
+    }
+
+    $credentials = $query
+        ->latest()
+        ->paginate(20)
+        ->withQueryString();
+
+    $clients = Client::orderBy('company_name')->get();
+
+    return view(
+        'client-credentials.index',
+        compact(
+            'credentials',
+            'clients'
+        )
+    );
+}
 
     /**
      * Create credential.
      */
     public function create()
-    {
-        $this->authorize(
-            'create',
-            ClientCredential::class
-        );
+{
+    $this->authorize(
+        'create',
+        ClientCredential::class
+    );
 
-        $clients = Client::orderBy('company_name')
-            ->pluck(
-                'company_name',
-                'id'
-            );
+    $clients = Client::orderBy('company_name')
+        ->get();
 
-        return view(
-            'client-credentials.create',
-            compact('clients')
-        );
-    }
+    return view(
+        'client-credentials.create',
+        compact('clients')
+    );
+}
 
     /**
  * Store credential.
@@ -135,53 +135,53 @@ public function store(StoreClientCredentialRequest $request)
         |--------------------------------------------------------------------------
         */
 
-        if (!empty($data['password'])) {
+        // if (!empty($data['password'])) {
 
-            $data['password'] = Crypt::encryptString(
-                $data['password']
-            );
+        //     $data['password'] = Crypt::encryptString(
+        //         $data['password']
+        //     );
 
-        }
+        // }
 
-        if (!empty($data['security_pin'])) {
+        // if (!empty($data['security_pin'])) {
 
-            $data['security_pin'] = Crypt::encryptString(
-                $data['security_pin']
-            );
+        //     $data['security_pin'] = Crypt::encryptString(
+        //         $data['security_pin']
+        //     );
 
-        }
+        // }
 
-        if (!empty($data['api_key'])) {
+        // if (!empty($data['api_key'])) {
 
-            $data['api_key'] = Crypt::encryptString(
-                $data['api_key']
-            );
+        //     $data['api_key'] = Crypt::encryptString(
+        //         $data['api_key']
+        //     );
 
-        }
+        // }
 
-        if (!empty($data['api_secret'])) {
+        // if (!empty($data['api_secret'])) {
 
-            $data['api_secret'] = Crypt::encryptString(
-                $data['api_secret']
-            );
+        //     $data['api_secret'] = Crypt::encryptString(
+        //         $data['api_secret']
+        //     );
 
-        }
+        // }
 
-        if (!empty($data['access_token'])) {
+        // if (!empty($data['access_token'])) {
 
-            $data['access_token'] = Crypt::encryptString(
-                $data['access_token']
-            );
+        //     $data['access_token'] = Crypt::encryptString(
+        //         $data['access_token']
+        //     );
 
-        }
+        // }
 
-        if (!empty($data['refresh_token'])) {
+        // if (!empty($data['refresh_token'])) {
 
-            $data['refresh_token'] = Crypt::encryptString(
-                $data['refresh_token']
-            );
+        //     $data['refresh_token'] = Crypt::encryptString(
+        //         $data['refresh_token']
+        //     );
 
-        }
+        // }
 
         $credential = ClientCredential::create($data);
 
@@ -249,13 +249,8 @@ public function edit(
         $clientCredential
     );
 
-    $clients = Client::orderBy(
-            'company_name'
-        )
-        ->pluck(
-            'company_name',
-            'id'
-        );
+    $clients = Client::orderBy('company_name')
+        ->get();
 
     return view(
         'client-credentials.edit',
@@ -291,31 +286,8 @@ public function update(
         |--------------------------------------------------------------------------
         */
 
-        foreach ([
-            'password',
-            'security_pin',
-            'api_key',
-            'api_secret',
-            'access_token',
-            'refresh_token'
-        ] as $field) {
-
-            if (
-                !empty($data[$field])
-            ) {
-
-                $data[$field] = Crypt::encryptString(
-                    $data[$field]
-                );
-
-            } else {
-
-                unset(
-                    $data[$field]
-                );
-
-            }
-
+        if (empty($data['password'])) {
+            unset($data['password']);
         }
 
         $clientCredential->update($data);

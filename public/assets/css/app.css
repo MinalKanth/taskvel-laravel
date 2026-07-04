@@ -221,7 +221,7 @@ h4 {
 }
 
 .btn-primary {
-    background: var(--primary);
+    color: #ffffff !important; 
     border-color: var(--primary);
 }
 

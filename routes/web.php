@@ -336,6 +336,37 @@ Route::prefix('client-addresses')
 
     });
 
+    Route::get(
+    'client-credentials/trashed',
+    [ClientCredentialController::class, 'trashed']
+)->name('client-credentials.trashed');
+
+Route::post(
+    'client-credentials/{id}/restore',
+    [ClientCredentialController::class, 'restore']
+)->name('client-credentials.restore');
+
+Route::delete(
+    'client-credentials/{id}/force-delete',
+    [ClientCredentialController::class, 'forceDelete']
+)->name('client-credentials.force-delete');
+
+Route::delete(
+    'client-credentials/trash/empty',
+    [ClientCredentialController::class, 'emptyTrash']
+)->name('client-credentials.empty-trash');
+
+Route::post(
+    'client-credentials/bulk-restore',
+    [ClientCredentialController::class, 'bulkRestore']
+)->name('client-credentials.bulk-restore');
+
+
+Route::delete(
+    'client-credentials/bulk-delete',
+    [ClientCredentialController::class, 'bulkDelete']
+)->name('client-credentials.bulk-delete');
+
     /*
     |--------------------------------------------------------------------------
     | Theme

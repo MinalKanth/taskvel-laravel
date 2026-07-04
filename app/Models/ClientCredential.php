@@ -49,15 +49,13 @@ class ClientCredential extends Model
 
         'metadata',
         'remarks',
+
+        'created_by',
+        'updated_by',
     ];
 
     protected $casts = [
-        'password' => 'encrypted',
-        'security_answer' => 'encrypted',
-        'api_key' => 'encrypted',
-        'api_secret' => 'encrypted',
-        'pin' => 'encrypted',
-
+        
         'otp_required' => 'boolean',
         'dsc_required' => 'boolean',
         'is_active' => 'boolean',
