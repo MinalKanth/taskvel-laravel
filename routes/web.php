@@ -182,6 +182,85 @@ Route::resource('client-documents', ClientDocumentController::class);
 Route::resource('client-credentials', ClientCredentialController::class);
 
 Route::resource('client-remarks', ClientRemarkController::class);
+Route::post(
+
+    'client-remarks/{clientRemark}/resolve',
+
+    [ClientRemarkController::class, 'resolve']
+
+)->name('client-remarks.resolve');
+
+Route::post(
+
+    'client-remarks/{clientRemark}/reopen',
+
+    [ClientRemarkController::class, 'reopen']
+
+)->name('client-remarks.reopen');
+
+Route::post(
+
+    'client-remarks/{clientRemark}/pin',
+
+    [ClientRemarkController::class, 'pin']
+
+)->name('client-remarks.pin');
+
+Route::post(
+
+    'client-remarks/{clientRemark}/unpin',
+
+    [ClientRemarkController::class, 'unpin']
+
+)->name('client-remarks.unpin');
+
+Route::delete(
+
+    'client-remarks/bulk-delete',
+
+    [ClientRemarkController::class, 'bulkDelete']
+
+)->name('client-remarks.bulk-delete');
+
+Route::get(
+
+    'client-remarks/trashed',
+
+    [ClientRemarkController::class, 'trashed']
+
+)->name('client-remarks.trashed');
+
+Route::post(
+
+    'client-remarks/{id}/restore',
+
+    [ClientRemarkController::class, 'restore']
+
+)->name('client-remarks.restore');
+
+Route::delete(
+
+    'client-remarks/{id}/force-delete',
+
+    [ClientRemarkController::class, 'forceDelete']
+
+)->name('client-remarks.force-delete');
+
+Route::post(
+
+    'client-remarks/bulk-restore',
+
+    [ClientRemarkController::class, 'bulkRestore']
+
+)->name('client-remarks.bulk-restore');
+
+Route::delete(
+
+    'client-remarks/empty-trash',
+
+    [ClientRemarkController::class, 'emptyTrash']
+
+)->name('client-remarks.empty-trash');
 
 Route::resource('client-communications', ClientCommunicationController::class);
 

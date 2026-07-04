@@ -46,7 +46,7 @@
 
             @can('restore', App\Models\ClientCredential::class)
 
-                <a
+                {{-- <a
                     href="{{ route('client-credentials.trashed') }}"
                     class="btn btn-danger">
 
@@ -54,7 +54,7 @@
 
                     Trash
 
-                </a>
+                </a> --}}
 
             @endcan
 

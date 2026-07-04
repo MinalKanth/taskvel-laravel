@@ -12,28 +12,33 @@ class ClientRemark extends Model
 
     protected $fillable = [
 
-        'client_id',
+    'client_id',
 
-        'parent_id',
+    'parent_id',
 
-        'user_id',
+    'user_id',
 
-        'remark',
+    'remark',
 
-        'type',
+    'type',
 
-        'is_private',
+    'is_private',
 
-        'is_pinned',
+    'is_pinned',
 
-        'status',
+    'status',
 
-        'attachment',
+    'attachment',
 
-        'mentioned_user_id',
+    'mentioned_user_id',
 
-        'read_at'
-    ];
+    'read_at',
+
+    'created_by',
+
+    'updated_by',
+
+];
 
     protected $casts = [
 
@@ -90,4 +95,20 @@ class ClientRemark extends Model
     {
         return $query->where('is_pinned',true);
     }
+    
+    public function creator()
+{
+    return $this->belongsTo(
+        User::class,
+        'created_by'
+    );
+}
+
+public function updater()
+{
+    return $this->belongsTo(
+        User::class,
+        'updated_by'
+    );
+}
 }

@@ -18,12 +18,12 @@ class ClientRemarkObserver
     /**
      * Handle the ClientRemark "creating" event.
      */
-    public function creating(ClientRemark $clientRemark): void
-    {
-        if (empty($clientRemark->created_by) && auth()->check()) {
-            $clientRemark->created_by = auth()->id();
-        }
-    }
+    // public function creating(ClientRemark $clientRemark): void
+    // {
+    //     if (empty($clientRemark->created_by) && auth()->check()) {
+    //         $clientRemark->created_by = auth()->id();
+    //     }
+    // }
 
     /**
      * Handle the ClientRemark "created" event.
@@ -139,4 +139,14 @@ class ClientRemarkObserver
             'user_id'   => auth()->id(),
         ]);
     }
+
+    public function creating(ClientRemark $clientRemark): void
+{
+    if (auth()->check()) {
+
+        $clientRemark->created_by = auth()->id();
+
+    }
+}
+
 }

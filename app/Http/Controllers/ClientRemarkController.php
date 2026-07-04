@@ -6,10 +6,12 @@ use App\Http\Requests\StoreClientRemarkRequest;
 use App\Http\Requests\UpdateClientRemarkRequest;
 use App\Models\Client;
 use App\Models\ClientRemark;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class ClientRemarkController extends Controller
 {
@@ -17,102 +19,125 @@ class ClientRemarkController extends Controller
      * Display remarks.
      */
     public function index(Request $request)
-    {
-        $this->authorize('viewAny', ClientRemark::class);
+{
+    $this->authorize('viewAny', ClientRemark::class);
 
-        $query = ClientRemark::query()
+    $query = ClientRemark::query()
+        ->with([
+            'client',
+            'user',
+        ]);
 
-            ->with([
-                'client',
-                'user',
-            ]);
+    if ($request->filled('client_id')) {
 
-        if ($request->filled('client_id')) {
+        $query->where(
+            'client_id',
+            $request->client_id
+        );
 
-            $query->where(
-                'client_id',
-                $request->client_id
-            );
+    }
 
-        }
+    if ($request->filled('type')) {
 
-        if ($request->filled('priority')) {
+        $query->where(
+            'type',
+            $request->type
+        );
 
-            $query->where(
-                'priority',
-                $request->priority
-            );
+    }
 
-        }
+    if ($request->filled('status')) {
 
-        if ($request->filled('status')) {
+        $query->where(
+            'status',
+            $request->status
+        );
 
-            $query->where(
-                'status',
-                $request->status
-            );
+    }
 
-        }
+    if ($request->filled('search')) {
 
-        if ($request->filled('search')) {
+        $search = trim($request->search);
 
-            $search = trim($request->search);
+        $query->where(function ($q) use ($search) {
 
-            $query->where(function ($q) use ($search) {
+            $q->where(
+                'remark',
+                'like',
+                "%{$search}%"
+            )
 
-                $q->where(
-                    'title',
+            ->orWhereHas('client', function ($client) use ($search) {
+
+                $client->where(
+                    'company_name',
                     'like',
                     "%{$search}%"
                 )
 
                 ->orWhere(
-                    'remark',
+                    'client_code',
+                    'like',
+                    "%{$search}%"
+                );
+
+            })
+
+            ->orWhereHas('user', function ($user) use ($search) {
+
+                $user->where(
+                    'name',
                     'like',
                     "%{$search}%"
                 );
 
             });
 
-        }
+        });
 
-        $remarks = $query
-
-            ->latest()
-
-            ->paginate(20)
-
-            ->withQueryString();
-
-        return view(
-            'client-remarks.index',
-            compact('remarks')
-        );
     }
+
+    $remarks = $query
+        ->latest()
+        ->paginate(20)
+        ->withQueryString();
+
+    $clients = Client::orderBy('company_name')->get();
+
+    return view(
+        'client-remarks.index',
+        compact(
+            'remarks',
+            'clients'
+        )
+    );
+}
 
     /**
      * Create remark.
      */
     public function create()
-    {
-        $this->authorize(
-            'create',
-            ClientRemark::class
-        );
+{
+    $this->authorize(
+        'create',
+        ClientRemark::class
+    );
 
-        $clients = Client::orderBy(
-                'company_name'
-            )
-            ->pluck(
-                'company_name',
-                'id'
-            );
+    $clients = Client::orderBy('company_name')->get();
 
-        return view(
-            'client-remarks.create',
-            compact('clients')
-        );
-    }
+    $users = User::orderBy('name')->get();
+
+    $parentRemarks = ClientRemark::orderByDesc('id')->get();
+
+    return view(
+        'client-remarks.create',
+        compact(
+            'clients',
+            'users',
+            'parentRemarks'
+        )
+    );
+}
 /**
  * Store a newly created remark.
  */
@@ -127,6 +152,17 @@ public function store(StoreClientRemarkRequest $request)
         $data = $request->validated();
 
         $data['created_by'] = auth()->id();
+
+        if ($request->hasFile('attachment')) {
+
+            $data['attachment'] = $request
+                ->file('attachment')
+                ->store(
+                    'client-remarks',
+                    'public'
+                );
+
+        }
 
         $remark = ClientRemark::create($data);
 
@@ -166,6 +202,9 @@ public function show(ClientRemark $clientRemark)
     $clientRemark->load([
         'client',
         'user',
+        'parent',
+        'mentionedUser',
+        'replies.user',
     ]);
 
     return view(
@@ -181,17 +220,21 @@ public function edit(ClientRemark $clientRemark)
 {
     $this->authorize('update', $clientRemark);
 
-    $clients = Client::orderBy('company_name')
-        ->pluck(
-            'company_name',
-            'id'
-        );
+    $clients = Client::orderBy('company_name')->get();
+
+    $users = \App\Models\User::orderBy('name')->get();
+
+    $parentRemarks = ClientRemark::where('id', '!=', $clientRemark->id)
+        ->latest()
+        ->get();
 
     return view(
         'client-remarks.edit',
         compact(
             'clientRemark',
-            'clients'
+            'clients',
+            'users',
+            'parentRemarks'
         )
     );
 }
@@ -210,9 +253,37 @@ public function update(
 
     try {
 
-        $clientRemark->update(
-            $request->validated()
-        );
+        $data = $request->validated();
+
+        $data['updated_by'] = auth()->id();
+
+        if ($request->hasFile('attachment')) {
+
+            if (
+                $clientRemark->attachment &&
+                Storage::disk('public')->exists($clientRemark->attachment)
+            ) {
+
+                Storage::disk('public')->delete(
+                    $clientRemark->attachment
+                );
+
+            }
+
+            $data['attachment'] = $request
+                ->file('attachment')
+                ->store(
+                    'client-remarks',
+                    'public'
+                );
+
+        } else {
+
+            unset($data['attachment']);
+
+        }
+
+        $clientRemark->update($data);
 
         DB::commit();
 
