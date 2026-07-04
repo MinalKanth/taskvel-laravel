@@ -16,6 +16,15 @@ use Spatie\Permission\Traits\HasRoles;
     'name',
     'email',
     'password',
+    'phone',
+    'user_type',
+    'client_id',
+    'avatar',
+    'designation',
+    'department',
+    'status',
+    'timezone',
+    'language',
 ])]
 
 #[Hidden([
@@ -35,6 +44,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_login_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -68,5 +78,9 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class);
+    }
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 }
