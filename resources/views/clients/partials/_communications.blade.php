@@ -69,7 +69,7 @@
 
                             <td>
 
-                                @switch($communication->communication_type)
+                                @switch($communication->channel)
 
                                     @case('Email')
 
@@ -125,7 +125,7 @@
 
                                         <span class="badge bg-secondary">
 
-                                            {{ $communication->communication_type }}
+                                            {{ $communication->channel }}
 
                                         </span>
 

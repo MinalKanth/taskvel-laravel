@@ -18,64 +18,123 @@ class ClientContactController extends Controller
      * Display all contacts.
      */
     public function index(Request $request)
-    {
-        $this->authorize('viewAny', ClientContact::class);
+{
+    $this->authorize(
+        'viewAny',
+        ClientContact::class
+    );
 
-        $query = ClientContact::with('client');
+    $query = ClientContact::query()
 
-        if ($request->filled('client_id')) {
+        ->with([
+            'client',
+        ]);
 
-            $query->where(
-                'client_id',
-                $request->client_id
+    if ($request->filled('client_id')) {
+
+        $query->where(
+            'client_id',
+            $request->client_id
+        );
+
+    }
+
+    if ($request->filled('is_active')) {
+
+        $query->where(
+            'is_active',
+            $request->is_active
+        );
+
+    }
+
+    if ($request->filled('is_primary')) {
+
+        $query->where(
+            'is_primary',
+            $request->is_primary
+        );
+
+    }
+
+    if ($request->filled('search')) {
+
+        $search = trim($request->search);
+
+        $query->where(function ($q) use ($search) {
+
+            $q->where(
+                'first_name',
+                'like',
+                "%{$search}%"
+            )
+
+            ->orWhere(
+                'last_name',
+                'like',
+                "%{$search}%"
+            )
+
+            ->orWhere(
+                'full_name',
+                'like',
+                "%{$search}%"
+            )
+
+            ->orWhere(
+                'designation',
+                'like',
+                "%{$search}%"
+            )
+
+            ->orWhere(
+                'department',
+                'like',
+                "%{$search}%"
+            )
+
+            ->orWhere(
+                'email',
+                'like',
+                "%{$search}%"
+            )
+
+            ->orWhere(
+                'mobile',
+                'like',
+                "%{$search}%"
+            )
+
+            ->orWhere(
+                'whatsapp_number',
+                'like',
+                "%{$search}%"
             );
 
-        }
+        });
 
-        if ($request->filled('search')) {
-
-            $search = $request->search;
-
-            $query->where(function ($q) use ($search) {
-
-                $q->where(
-                    'name',
-                    'like',
-                    "%{$search}%"
-                )
-
-                ->orWhere(
-                    'designation',
-                    'like',
-                    "%{$search}%"
-                )
-
-                ->orWhere(
-                    'email',
-                    'like',
-                    "%{$search}%"
-                )
-
-                ->orWhere(
-                    'mobile',
-                    'like',
-                    "%{$search}%"
-                );
-
-            });
-
-        }
-
-        $contacts = $query
-            ->latest()
-            ->paginate(20)
-            ->withQueryString();
-
-        return view(
-            'client-contacts.index',
-            compact('contacts')
-        );
     }
+
+    $contacts = $query
+
+        ->latest()
+
+        ->paginate(20)
+
+        ->withQueryString();
+
+    $clients = Client::orderBy(
+        'company_name'
+    )->get();
+
+    return view(
+        'client-contacts.index',
+        compact(
+            'contacts',
+            'clients'
+        )
+    );
+}
 
     /**
      * Create Contact

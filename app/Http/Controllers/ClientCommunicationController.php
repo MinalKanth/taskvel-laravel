@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\User;
 
 class ClientCommunicationController extends Controller
 {
@@ -36,14 +37,14 @@ class ClientCommunicationController extends Controller
 
         }
 
-        if ($request->filled('type')) {
+        if ($request->filled('channel')) {
 
-            $query->where(
-                'communication_type',
-                $request->type
-            );
+    $query->where(
+        'channel',
+        $request->channel
+    );
 
-        }
+}
 
         if ($request->filled('status')) {
 
@@ -84,9 +85,19 @@ class ClientCommunicationController extends Controller
 
             ->withQueryString();
 
+        $communications = $query
+            ->latest()
+            ->paginate(20)
+            ->withQueryString();
+
+        $clients = Client::orderBy('company_name')->get();
+
         return view(
             'client-communications.index',
-            compact('communications')
+            compact(
+                'communications',
+                'clients'
+            )
         );
     }
 
@@ -94,25 +105,24 @@ class ClientCommunicationController extends Controller
      * Create communication.
      */
     public function create()
-    {
-        $this->authorize(
-            'create',
-            ClientCommunication::class
-        );
+{
+    $this->authorize(
+        'create',
+        ClientCommunication::class
+    );
 
-        $clients = Client::orderBy(
-                'company_name'
-            )
-            ->pluck(
-                'company_name',
-                'id'
-            );
+    $clients = Client::orderBy('company_name')->get();
 
-        return view(
-            'client-communications.create',
-            compact('clients')
-        );
-    }
+    $users = \App\Models\User::orderBy('name')->get();
+
+    return view(
+        'client-communications.create',
+        compact(
+            'clients',
+            'users'
+        )
+    );
+}
     /**
  * Store a newly created communication.
  */
@@ -198,17 +208,20 @@ public function edit(
         $clientCommunication
     );
 
-    $clients = Client::orderBy('company_name')
-        ->pluck(
-            'company_name',
-            'id'
-        );
+    $clients = Client::orderBy(
+        'company_name'
+    )->get();
+
+    $users = User::orderBy(
+        'name'
+    )->get();
 
     return view(
         'client-communications.edit',
         compact(
             'clientCommunication',
-            'clients'
+            'clients',
+            'users'
         )
     );
 }
@@ -322,11 +335,11 @@ public function trashed(Request $request)
 
     }
 
-    if ($request->filled('communication_type')) {
+    if ($request->filled('channel')) {
 
         $query->where(
-            'communication_type',
-            $request->communication_type
+            'channel',
+            $request->channel
         );
 
     }
@@ -632,9 +645,9 @@ public function datatable(Request $request): JsonResponse
 
         })
 
-        ->editColumn('communication_type', function ($communication) {
+        ->editColumn('channel', function ($communication) {
 
-            $class = match ($communication->communication_type) {
+            $class = match ($communication->channel) {
 
                 'Email' => 'primary',
 
@@ -651,7 +664,7 @@ public function datatable(Request $request): JsonResponse
             };
 
             return '<span class="badge bg-'.$class.'">'.
-                e($communication->communication_type).
+                e($communication->channel).
                 '</span>';
 
         })
@@ -710,11 +723,11 @@ public function datatable(Request $request): JsonResponse
 
             }
 
-            if ($request->filled('communication_type')) {
+            if ($request->filled('channel')) {
 
                 $query->where(
-                    'communication_type',
-                    $request->communication_type
+                    'channel',
+                    $request->channel
                 );
 
             }
@@ -731,7 +744,7 @@ public function datatable(Request $request): JsonResponse
         })
 
         ->rawColumns([
-            'communication_type',
+            'channel',
             'status',
             'actions',
         ])

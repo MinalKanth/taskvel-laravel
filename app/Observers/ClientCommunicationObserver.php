@@ -18,16 +18,16 @@ class ClientCommunicationObserver
     /**
      * Handle the ClientCommunication "creating" event.
      */
-    public function creating(ClientCommunication $clientCommunication): void
-    {
-        if (empty($clientCommunication->created_by) && auth()->check()) {
-            $clientCommunication->created_by = auth()->id();
-        }
+    // public function creating(ClientCommunication $clientCommunication): void
+    // {
+    //     if (empty($clientCommunication->created_by) && auth()->check()) {
+    //         $clientCommunication->created_by = auth()->id();
+    //     }
 
-        if (empty($clientCommunication->communication_at)) {
-            $clientCommunication->communication_at = now();
-        }
-    }
+    //     if (empty($clientCommunication->communication_at)) {
+    //         $clientCommunication->communication_at = now();
+    //     }
+    // }
 
     /**
      * Handle the ClientCommunication "created" event.
@@ -37,7 +37,7 @@ class ClientCommunicationObserver
         Log::info('Client communication created.', [
             'communication_id' => $clientCommunication->id,
             'client_id'        => $clientCommunication->client_id,
-            'type'             => $clientCommunication->communication_type,
+            'type'             => $clientCommunication->channel,
             'status'           => $clientCommunication->status,
             'user_id'          => auth()->id(),
         ]);
@@ -51,12 +51,12 @@ class ClientCommunicationObserver
     /**
      * Handle the ClientCommunication "updating" event.
      */
-    public function updating(ClientCommunication $clientCommunication): void
-    {
-        if (auth()->check()) {
-            $clientCommunication->updated_by = auth()->id();
-        }
-    }
+    // public function updating(ClientCommunication $clientCommunication): void
+    // {
+    //     if (auth()->check()) {
+    //         $clientCommunication->updated_by = auth()->id();
+    //     }
+    // }
 
     /**
      * Handle the ClientCommunication "updated" event.
@@ -66,7 +66,7 @@ class ClientCommunicationObserver
         Log::info('Client communication updated.', [
             'communication_id' => $clientCommunication->id,
             'client_id'        => $clientCommunication->client_id,
-            'type'             => $clientCommunication->communication_type,
+            'type'             => $clientCommunication->channel,
             'status'           => $clientCommunication->status,
             'user_id'          => auth()->id(),
         ]);
@@ -104,7 +104,7 @@ class ClientCommunicationObserver
         Log::warning('Client communication deleted.', [
             'communication_id' => $clientCommunication->id,
             'client_id'        => $clientCommunication->client_id,
-            'type'             => $clientCommunication->communication_type,
+            'type'             => $clientCommunication->channel,
             'user_id'          => auth()->id(),
         ]);
     }
@@ -125,7 +125,7 @@ class ClientCommunicationObserver
         Log::info('Client communication restored.', [
             'communication_id' => $clientCommunication->id,
             'client_id'        => $clientCommunication->client_id,
-            'type'             => $clientCommunication->communication_type,
+            'type'             => $clientCommunication->channel,
             'user_id'          => auth()->id(),
         ]);
     }
@@ -146,7 +146,7 @@ class ClientCommunicationObserver
         Log::critical('Client communication permanently deleted.', [
             'communication_id' => $clientCommunication->id,
             'client_id'        => $clientCommunication->client_id,
-            'type'             => $clientCommunication->communication_type,
+            'type'             => $clientCommunication->channel,
             'user_id'          => auth()->id(),
         ]);
     }

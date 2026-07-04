@@ -173,6 +173,57 @@ Route::resource('clients', ClientController::class);
 
 Route::resource('client-contacts', ClientContactController::class);
 
+
+Route::resource(
+    'client-contacts',
+    ClientContactController::class
+);
+
+Route::get(
+    'client-contacts/trashed',
+    [ClientContactController::class, 'trashed']
+)->name('client-contacts.trashed');
+
+Route::post(
+    'client-contacts/{id}/restore',
+    [ClientContactController::class, 'restore']
+)->name('client-contacts.restore');
+
+Route::delete(
+    'client-contacts/{id}/force-delete',
+    [ClientContactController::class, 'forceDelete']
+)->name('client-contacts.force-delete');
+
+Route::delete(
+    'client-contacts/bulk-delete',
+    [ClientContactController::class, 'bulkDelete']
+)->name('client-contacts.bulk-delete');
+
+Route::post(
+    'client-contacts/bulk-restore',
+    [ClientContactController::class, 'bulkRestore']
+)->name('client-contacts.bulk-restore');
+
+Route::delete(
+    'client-contacts/empty-trash',
+    [ClientContactController::class, 'emptyTrash']
+)->name('client-contacts.empty-trash');
+
+Route::get(
+    'client-contacts/datatable',
+    [ClientContactController::class, 'datatable']
+)->name('client-contacts.datatable');
+
+Route::get(
+    'client-contacts/search',
+    [ClientContactController::class, 'search']
+)->name('client-contacts.search');
+
+Route::delete(
+    'client-contacts/{clientContact}/ajax-delete',
+    [ClientContactController::class, 'ajaxDelete']
+)->name('client-contacts.ajax-delete');
+
 Route::resource('client-addresses', ClientAddressController::class);
 
 Route::resource('client-services', ClientServiceController::class);
@@ -263,8 +314,136 @@ Route::delete(
 )->name('client-remarks.empty-trash');
 
 Route::resource('client-communications', ClientCommunicationController::class);
+Route::get(
+
+    'client-communications/trashed',
+
+    [ClientCommunicationController::class, 'trashed']
+
+)->name('client-communications.trashed');
+
+Route::post(
+
+    'client-communications/{id}/restore',
+
+    [ClientCommunicationController::class, 'restore']
+
+)->name('client-communications.restore');
+
+Route::delete(
+
+    'client-communications/{id}/force-delete',
+
+    [ClientCommunicationController::class, 'forceDelete']
+
+)->name('client-communications.force-delete');
+
+Route::delete(
+
+    'client-communications/bulk-delete',
+
+    [ClientCommunicationController::class, 'bulkDelete']
+
+)->name('client-communications.bulk-delete');
+
+Route::post(
+
+    'client-communications/bulk-restore',
+
+    [ClientCommunicationController::class, 'bulkRestore']
+
+)->name('client-communications.bulk-restore');
+
+Route::delete(
+
+    'client-communications/empty-trash',
+
+    [ClientCommunicationController::class, 'emptyTrash']
+
+)->name('client-communications.empty-trash');
+
+Route::get(
+
+    'client-communications/datatable',
+
+    [ClientCommunicationController::class, 'datatable']
+
+)->name('client-communications.datatable');
+
+Route::get(
+
+    'client-communications/search',
+
+    [ClientCommunicationController::class, 'search']
+
+)->name('client-communications.search');
+
+Route::delete(
+
+    'client-communications/{clientCommunication}/ajax-delete',
+
+    [ClientCommunicationController::class, 'ajaxDelete']
+
+)->name('client-communications.ajax-delete');
+
+Route::patch(
+
+    'client-communications/{clientCommunication}/change-status',
+
+    [ClientCommunicationController::class, 'changeStatus']
+
+)->name('client-communications.change-status');
 
 Route::resource('client-tags', ClientTagController::class);
+Route::get(
+    'client-tags/trashed',
+    [ClientTagController::class, 'trashed']
+)->name('client-tags.trashed');
+
+Route::post(
+    'client-tags/{id}/restore',
+    [ClientTagController::class, 'restore']
+)->name('client-tags.restore');
+
+Route::delete(
+    'client-tags/{id}/force-delete',
+    [ClientTagController::class, 'forceDelete']
+)->name('client-tags.force-delete');
+
+Route::post(
+    'client-tags/bulk-delete',
+    [ClientTagController::class, 'bulkDelete']
+)->name('client-tags.bulk-delete');
+
+Route::post(
+    'client-tags/bulk-restore',
+    [ClientTagController::class, 'bulkRestore']
+)->name('client-tags.bulk-restore');
+
+Route::delete(
+    'client-tags/empty-trash',
+    [ClientTagController::class, 'emptyTrash']
+)->name('client-tags.empty-trash');
+
+Route::get(
+    'client-tags/datatable',
+    [ClientTagController::class, 'datatable']
+)->name('client-tags.datatable');
+
+Route::get(
+    'client-tags/search',
+    [ClientTagController::class, 'search']
+)->name('client-tags.search');
+
+Route::get(
+    'client-tags/options',
+    [ClientTagController::class, 'options']
+)->name('client-tags.options');
+
+Route::patch(
+    'client-tags/{clientTag}/toggle-status',
+    [ClientTagController::class, 'toggleStatus']
+)->name('client-tags.toggle-status');
 
 Route::resource('client-documents', ClientDocumentController::class);
 
