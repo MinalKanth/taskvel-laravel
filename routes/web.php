@@ -20,6 +20,7 @@ use App\Http\Controllers\ClientRemarkController;
 use App\Http\Controllers\ClientCommunicationController;
 use App\Http\Controllers\ClientTagController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PermissionController;
 
 
 /*
@@ -652,6 +653,15 @@ Route::middleware(['auth'])
         Route::get('/{conversation}/messages', [ChatController::class, 'messages'])->name('messages');
     });
 
+
+    Route::middleware(['auth'])->group(function () {
+
+        // Permission Routes
+        Route::resource('permissions', PermissionController::class);
+        Route::get('permissions/assign', [PermissionController::class, 'assignForm'])->name('permissions.assign');
+        Route::post('permissions/assign', [PermissionController::class, 'assignPermissions']);
+        Route::get('users/by_type', [UserController::class, 'getUsersByType'])->name('users.by_type');
+    });
     /*
     |--------------------------------------------------------------------------
     | Theme

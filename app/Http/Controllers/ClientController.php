@@ -101,6 +101,23 @@ class ClientController extends Controller
             // Create Client
             $client = Client::create($data);
 
+                // Create client user
+            $password = \Str::random(8);
+            $user = User::create([
+                'name' => $client->company_name,
+                'email' => $client->email,
+                'password' => \Hash::make($password),
+                'user_type' => 'client',
+                'client_id' => $client->id,
+                // Set other user fields as needed
+            ]);
+
+            $user->assignRole('Client');
+
+            // Send email to client with login credentials
+            \Mail::to($client->email)->send(new \App\Mail\ClientCredentials($client, $user, $password));
+
+            
             DB::commit();
 
             return redirect()

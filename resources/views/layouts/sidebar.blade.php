@@ -342,6 +342,38 @@
                 </a>
 
             </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link {{ request()->routeIs('permissions.*') ? 'active' : '' }}">
+                    {{-- ICON --}}
+                    <span class="nav-icon">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </span>
+
+                    {{-- TEXT --}}
+                    <span class="nav-text">
+                        Permissions
+                    </span>
+
+                    {{-- ARROW ICON --}}
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+
+                {{-- SUBMENU --}}
+                <ul class="nav-submenu {{ request()->routeIs('permissions.*') ? 'show' : '' }}">
+                    <li class="nav-item">
+                        <a href="{{ route('permissions.index') }}" class="nav-link {{ request()->routeIs('permissions.index') ? 'active' : '' }}">
+                            <i class="bi bi-circle nav-icon"></i>
+                            <span class="nav-text">All Permissions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('permissions.assign') }}" class="nav-link {{ request()->routeIs('permissions.assign') ? 'active' : '' }}">
+                            <i class="bi bi-circle nav-icon"></i>
+                            <span class="nav-text">Assign Permissions</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
             </ul>
 
